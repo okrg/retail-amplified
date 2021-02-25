@@ -1,0 +1,81 @@
+<?php
+error_reporting(E_ALL ^ E_NOTICE);
+	include("include/access.php");
+	if (($usergroup == 2)&&(!isset($page))) {
+		if (substr($uid,0,2) == "dm") {
+			switch (substr($uid,2)) {
+				case "1":
+				case "39":
+				case "22":
+				case "8":
+				case "18":
+				case "49":
+				case "4":
+				case "10":
+				case "28":
+				case "26":
+				case "36":
+				case "38":
+				case "34":
+				case "45":
+				case "6":
+				case "33":
+				case "42":
+				case "12":
+				case "19":
+				case "37":
+				case "34":
+				case "40":
+				case "36":
+				case "24":
+				case "2":
+					$page="freq-g2";
+					break;
+				default:
+					$page="g2";
+					break;
+				}
+			} else {
+			$page="g2";
+		}
+
+	}
+	
+	if (!isset($page)) {
+		$page="home";
+		}
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns:html="http://www.w3.org/1999/xhtml">
+<head>
+<title>Collaboration Network</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style type="text/css" media="all">@import "stylesheet.css";</style>
+<script type="text/javascript" src="scr1pz0rx.js"></script>
+</head>
+<body>
+<a name="top"></a>
+<div id="frame">
+<div id="header"><?php include("include/header.php"); ?></div>
+
+<div id="indexcity"></div>
+
+<div id="gradbar">
+<ul>
+<li><a href="index.php">Home</a></li>
+<?php
+if ($usergroup == 0)
+	echo "<li><a href=\"index.php?page=admin\">Admin Options</a></li>";
+if ($usercompany == 4)
+	echo "<li><a href=\"index.php?page=admin\">Facilities Options</a></li>";
+
+?>
+<li><a href="index.php?page=user">User Options</a></li>
+<li><a href="index.php?page=help">Help</a></li>
+</ul>
+</div>
+<?php include("$page.php"); ?>
+</div>
+ </body>
+</html>

@@ -1,0 +1,820 @@
+<?php
+
+function microtime_float()
+{
+   list($usec, $sec) = explode(" ", microtime());
+   return ((float)$usec + (float)$sec);
+}
+$time_start = microtime_float();
+
+if (isset($_GET['sort'])) {
+	$sortmethod = $_GET['sort'];
+	if ($_GET['sort'] == "region_set") {
+		$sortmethod = "store_region";
+		$region_classes = true;
+	}
+} else {
+	$sortmethod = "store_number asc";
+}
+
+
+if ($_GET['sort'] == "issue_date") {
+		$sortmethod = "issue_date desc";
+	}
+
+
+
+
+function start_table() {
+	print "<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\">";
+	print "<tr>";
+	print "<th width=\"28\"><small><a href=\"$PHP_SELF?page=admin-g2&sort=store_number\">Store</a></small></th>"; 
+	print "<th width=\"22\"><small><a href=\"$PHP_SELF?page=admin-g2&sort=store_district\">Dist.</a></small></th>"; 
+	print "<th width=\"22\"><small><a href=\"$PHP_SELF?page=admin-g2&sort=store_region\">Reg.</a></small></th>"; 
+	print "<th width=\"125\"><small><a href=\"$PHP_SELF?page=admin-g2&sort=issue_date\">Request Date</a></th>";
+	print "<th><small><a href=\"$PHP_SELF?page=admin-g2&sort=project_id\">Location</a></small></th>";
+	print "<th><small><a href=\"$PHP_SELF?page=admin-g2&sort=type\">Type</a></small></th>";
+	print "<th><small><a href=\"$PHP_SELF?page=admin-g2&sort=priority\">Priority</a></small></th>";
+	print "</tr>";
+}
+
+if (($usercompany == 4) or ($usergroup == 0)) {
+
+if ($_GET['do']=="clear") {
+		dbConnect();
+		$sql = "update repair_orders set status='clear' where id = ".$_GET['id'];
+		if (!mysql_query($sql)) {
+			error("A database error occured: " . mysql_error());
+		}	
+}
+
+
+
+switch ($_GET['mode']) {
+case "trash":
+	?>
+<div id="content">
+<h1>::  Trash This Request</h1>
+<div class="databox">
+	<?php
+	dbConnect();
+	$sql = "select * from repair_orders where id= {$_GET['id']}";
+	$result = mysql_query($sql);
+	if (!$result) {
+		error("A databass error has occured.$user_uid_rank $user_domain\\n".mysql_error());
+		}
+		
+	if (mysql_num_rows($result) == 0) {
+		print "<p><strong>Notice:</strong> It appears that there are currently no pending requests<em>!!</em></p>";
+	} else {
+	
+	//Cultivate data set
+	while ($row = mysql_fetch_array($result)) {
+		$id = $row["id"];
+		$project_id = $row["project_id"];
+		//$subject = $row["subject"];
+		$body  = $row["body"];
+		$author = $row["author"];
+		$type = $row["type"];
+		$priority = $row["priority"];
+		$tracking = $row["tracking"];
+		$contact_name = $row["contact_name"];
+		$contact_number = $row["contact_number"];
+		
+		$box_report = "";
+		$box_report .= "<p style=\"margin:0 4 0 4;color:#333;\">{$row["body"]}<br /><br />";
+		$box_report .= "<small><strong>Tracking:</strong> $tracking</small><br />";
+		$box_report .= "<small><strong>Type:</strong> $type</small><br />";
+		$box_report .= "<small><strong>Priority:</strong> $priority</small><br />";
+		$box_report .= "<small><strong>Contact Name: </strong>{$row["contact_name"]}<br />";
+		$box_report .= "<strong>Contact Number: </strong>{$row["contact_number"]}<br /></small>";
+		$box_report .= "</p>";
+	
+	//Get location details for this request based on project_id
+	$location_result = mysql_query("select * from projects where id=$project_id");
+	  while($row = mysql_fetch_array($location_result)) {
+			 	$sitename = $row["sitename"];
+			 	$siteaddress = $row["siteaddress"];
+			 	$siteaddress2 = $row["siteaddress2"];
+			 	$sitecity = $row["sitecity"];
+			 	$sitestate = $row["sitestate"];
+				$sitezip = $row["sitezip"];
+				$store_number = $row["store_number"];
+				$store_district=$row["store_district"];
+				$store_region=$row["store_region"];
+				}	 
+
+	print "<div id =\"box_".$id."\" style=\"margin-left:17px;\">";
+	print "<div style=\"float:right;\" class=\"bigshinybutton\">";
+	print "<small><strong>Location Data</strong></small><br />";
+	print "<p>$siteaddress<br />$siteaddress2<br />$sitecity &nbsp;&nbsp;$sitestate &nbsp;&nbsp;$sitezip</p>";
+	print "</div>";
+	print "<h2>$sitename</h2>";
+	print "<strong>$type</strong>";
+	print "<p>$box_report</p>";
+	print "</div>";
+	}
+}
+?>
+<form name="trash" method="post" action="<?php echo "$PHP_SELF?page=admin-g2&mode=submit_trash&id=$id"; ?>">
+<table class="litezone" width="100%">
+<tr>
+<td align="right"></td>
+<td><strong>Are you sure you want to trash this request without issuing a response?</strong></td>
+</tr>
+<tr>
+<td></td>
+<td>
+<input class="files" type="submit" name="submit" value="Yes, Trash it!">&nbsp;
+<input class="files" type="button" name="button" value="cancel" onClick="history.back()">
+</td>
+</tr>
+</table>
+</form>
+
+	
+</div>
+</div>
+<?php 
+	break;
+	
+	case "submit_trash":
+
+// Process edit
+	dbConnect();
+//Set the sql statment..
+		$sql ="delete from repair_orders where id = $id";
+		
+		if (!mysql_query($sql)) {
+			error("A database error occured: " . mysql_error());
+		} else {
+			$report = "Response trashed successfully.";
+			}
+		
+	?>
+<div id="content">
+<h1>:: Repair Order Trashed!</h1>
+<div class="databox">
+	<p><?=$report?></p>
+	<p>[<a href="<?php echo "$PHP_SELF?page=admin-g2"; ?>">Return to Request Order administration page</a>]</p>
+</div>
+</div>
+<?php
+
+	break;	
+	
+	
+	case "respond":
+	?>
+<div id="content">
+<h1>::  Respond to Request</h1>
+<div class="databox">
+	<?php
+	dbConnect();
+	$sql = "select * from repair_orders where id= {$_GET['id']}";
+	$result = mysql_query($sql);
+	if (!$result){
+		error("A databass error has occured.$user_uid_rank $user_domain\\n".mysql_error());
+	}
+	
+	if (mysql_num_rows($result) == 0) {
+		print "<p><strong>Notice:</strong> It appears that there are currently no pending requests<em>!!</em></p>";
+	} else {
+	
+//Cultivate data set
+	while ($row = mysql_fetch_array($result))
+	{
+	$id = $row["id"];
+	$project_id = $row["project_id"];
+	//$subject = $row["subject"];
+	$body  = $row["body"];
+	$author = $row["author"];
+	$type = $row["type"];
+	$priority = $row["priority"];
+	$tracking = $row["tracking"];	
+	$contact_name = $row["contact_name"];
+	$contact_number = $row["contact_number"];
+	
+	$box_report = "";
+	$box_report .= "<p style=\"margin:0 4 0 4;color:#333;\">{$row["body"]}<br /><br />";
+	$box_report .= "<small><strong>Tracking:</strong> $tracking</small><br />";
+	$box_report .= "<small><strong>Type:</strong> $type</small><br />";	
+	$box_report .= "<small><strong>Priority:</strong> $priority</small><br />";
+	$box_report .= "<small><strong>Contact Name: </strong>{$row["contact_name"]}<br />";
+	$box_report .= "<strong>Contact Number: </strong>{$row["contact_number"]}<br /></small>";
+	$box_report .= "</p>";
+	
+	//Get location details for this request based on project_id
+	$location_result = mysql_query("select * from projects where id=$project_id");
+	  while($row = mysql_fetch_array($location_result)) {
+			 	$sitename = $row["sitename"];
+			 	$siteaddress = $row["siteaddress"];
+			 	$siteaddress2 = $row["siteaddress2"];
+			 	$sitecity = $row["sitecity"];
+			 	$sitestate = $row["sitestate"];
+				$sitezip = $row["sitezip"];
+				$chain = $row["chain"];
+				$store_number = $row["store_number"];
+				$store_district=$row["store_district"];
+				$store_region=$row["store_region"];
+				}	 
+	if ($chain==1){$chain_name="Charlotte Russe";} elseif ($chain==2) {$chain_name="Rampage";}
+	print "<div id =\"box_".$id."\" style=\"margin-left:17px;\">";
+	print "<div style=\"float:right;\" class=\"bigshinybutton\">";
+	print "<small><strong>Location Data</strong><br />";
+	print "<strong>$chain_name</strong><br />";
+	print "$siteaddress<br />";
+	if ($siteaddress2 != "") { print "$siteaddress2<br />";}
+	print "$sitecity &nbsp;&nbsp;$sitestate &nbsp;&nbsp;$sitezip";
+	print "</small></div>";
+	print "<h2>$sitename</h2>";
+	print "<strong>$type</strong>";
+	print "<p>$box_report</p>";
+	print "</div>";
+	}
+}
+?>
+	
+<form name="edit" method="post" action="<?php echo "$PHP_SELF?page=admin-g2&mode=submit_response"; ?>">
+<input type="hidden" name="request_id" value="<?=$_GET["id"]?>">
+<input type="hidden" name="project_id" value="<?=$project_id?>">
+<input type="hidden" name="store_number" value="<?=$store_number?>">
+<input type="hidden" name="store_region" value="<?=$store_region?>">
+<input type="hidden" name="store_district" value="<?=$store_district?>">
+<table class="litezone" width="100%">
+
+<tr>
+<td align="right"><strong>Preset Response:</strong></td>
+<td><select name="new_preset_body" class="files">
+            <option value="" selected>-Select One-</option>
+			<option value="IT issue-Contact help desk x2428... ">IT Issue-Contact Help Desk x2428</option>
+			<option value="Loss Prevention issue... ">Loss Prevention Issue</option>
+			<option value="Upgrade project-Please send to RM for approval... ">Upgrade project-Please send to RM for approval</option>
+			<option value="Fixture disposal form and store planning approval required... ">Fixture disposal form and store planning approval required</option>
+			<option value="Purchasing issue-Contact the purchasing department x3029... ">Purchasing issue-Contact the purchasing department x3029</option>			
+            <option value="Received your request and it has been dispatched... ">Received your request and it has been dispatched</option>
+			<option value="Received your request and it is currently on hold... ">Received your request and it is currently on hold</option>
+			<option value="Received your request and will need more information from the store... ">Received your request and will need more information from the store</option>
+			<option value="Waiting on parts... ">Waiting on parts</option>
+			<option value="Waiting on a quote... ">Waiting on a quote</option>
+			<option value="Quote has been approved... ">Quote has been approved</option>
+			<option value="Parts have been ordered... ">Parts have been ordered</option>
+			<option value="Completed... ">Completed</option>
+			<option value="Other... ">Other</option>
+            </select></td>
+</tr>
+
+<tr>
+<td align="right"><strong>Response:</strong></td>
+<td><textarea class="files" name="new_body" cols="50" rows="6"><?=$new_body?></textarea></td>
+</tr>
+
+
+<tr>
+<td align="right"><strong>Vendor:</strong></td>
+<td><select name="new_vendor" class="files">
+            <option value="" selected>-Select One-</option>
+			<option value="BOSS">BOSS</option>
+			<option value="Metro Door">Metro Door</option>
+			<option value="Executive Safe">Executive Safe</option>
+			<option value="Royal">Royal</option>
+			<option value="Conditioned Air">Conditioned Air</option>			
+            <option value="Commercial Fire">Commercial Fire</option>
+			<option value="Terminex">Terminex</option>
+			<option value="Communication Resources">Communication Resources</option>
+			<option value="Cleanway">Cleanway</option>
+			<option value="Clearsign">Clearsign</option>
+			<option value="Signtech">Signtech</option>
+			<option value="General Contract">General Contract</option>
+			<option value="Saf">Saf</option>
+			<option value="Other">Other</option>
+            </select></td>
+</tr>
+
+<tr>
+<td align="right"><strong>PO:</strong></td>
+<td><input class="files" name="new_po_num" /></td>
+</tr>
+
+<tr>
+<td align="right">&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+
+
+
+<tr>
+<td></td>
+<td>
+<input class="files" type="submit" name="submit" value="submit">&nbsp;
+<input class="files" type="button" name="button" value="cancel" onClick="history.back()">
+</td>
+</tr>
+</table>
+</form>
+</div>
+<h1>:: Trash This Resquest?</h1>
+<div class="databox">
+<p>You have the option to just delete this request order without issuing a response. This will clear it from the database, and it will not show up in the archive.</p>
+<form name="trash" method="post" action="<?php echo "$PHP_SELF?page=admin-g2&mode=submit_trash&id=$id"; ?>">
+<table class="litezone" width="100%">
+<tr>
+<td align="right"><img src="images/delete.gif" /> <strong>Do you want to trash this request without issuing a response?</strong></td>
+<td>
+<input class="files" type="submit" name="submit" value="Yes, Trash it!">&nbsp;
+<input class="files" type="button" name="button" value="cancel" onClick="history.back()">
+</td>
+</tr>
+</table>
+</form>
+
+</div>
+<?php 
+break;
+
+case "submit_response":
+
+//check for a blank response
+if (($new_body == "") & ($new_preset_body == "")) {
+	error("You must write something in the request area before proceeding");
+}
+
+//Append selected preset to the body of text that they added.
+$new_body = $new_preset_body.$new_body;
+
+// Process edit
+	dbConnect();
+	$request_id = $_POST['request_id'];
+
+//Set the sql statment..
+		$sql ="insert into repair_orders set 
+				parent='$request_id',
+				project_id='$project_id',
+				store_region = '$store_region',
+				store_district = '$store_district',
+				status='response',
+				body='$new_body',
+				vendor='$new_vendor',
+				po_num='$new_po_num',
+				author='$username',
+				timestamp=NOW()";
+		
+		if (!mysql_query($sql)) {
+			error("A database error occured: " . mysql_error());
+		} else {
+			$new_body = stripslashes($new_body);
+			//send notification back to dm
+			//$dmuid = "dm".$store_district;
+			//$sql = "select email from users where userid = $dmuid";
+			//$result = mysql_query($sql);
+			//$dm_address = mysql_result($result,0,"email");
+			//$addresses = $dm_address;
+			//include ("notify_response.php");
+			$report = "<p>Response submitted successfully:<p>";
+			$report .= "<pre>$new_body</pre>";
+			$report .= "<p><strong>Vendor:</strong> $new_vendor</p>";
+			$report .= "<p><strong>PO:</strong> $new_po_num</p>";
+			}
+			
+		$sql = "update repair_orders set status='answered' where id = '$request_id'";
+		if (!mysql_query($sql)) {
+			error("A database error occured: " . mysql_error());
+		} else {
+			$report .= "<p><strong>Repair order request status:</strong> answered</p>";
+
+			}
+		
+	?>
+<div id="content">
+<h1>:: Response Submitted</h1>
+<div class="databox">
+	<p><?=$report?></p>
+	<p>[<a href="<?php echo "$PHP_SELF?page=admin-g2"; ?>">Return to Request Order administration page</a>]</p>
+</div>
+</div>
+<?php
+
+	break;
+	
+	default:
+	
+if (isset($_POST['var'])) {
+$var = $_POST['var'];
+$var = ltrim($var);
+$var = rtrim($var);
+}	
+switch ($_POST['filter']) {
+default:
+$filter_message = "No filtering set. Showing all!";
+$collapsed=TRUE;
+break;
+case "tracking":
+$filter_message = "Showing repair order request <strong>#$var</strong>";
+$filter_sql = "and tracking = '$var' ";
+$collapsed=FALSE;
+break;
+case "store_number":
+$filter_message = "Showing repair order requests for <strong>store #$var</strong>";
+$filter_sql = "and store_number = '$var' ";
+$collapsed=TRUE;
+break;
+case "store_district":
+$filter_message = "Showing repair order requests for <strong>district #$var</strong>";
+$filter_sql = "and store_district = '$var' ";
+$collapsed=TRUE;
+break;
+case "store_region":
+$filter_message = "Showing repair order requests for <strong>region #$var</strong>";
+$filter_sql = "and store_region = '$var' ";
+$region_filter=TRUE;
+break;
+}
+
+?>
+<div id="content">
+<div class="breadcrumbs"><a href="/">Home</a> &raquo; <a href="<?=$PHP_SELF?>?page=admin">Admin Options</a> &raquo; Repair Request Orders</div>
+
+<div class="databox">
+	<ul>
+		<li><a href="#pending">Pending</a></li>
+		<li><a href="#uncleared">Uncleared</a></li>
+		<li><a href="#cleared">Recently Cleared</a></li>
+	</ul>
+	
+<p>Now you can easily filter the requests! Enter a tracking number, or use the drop-down menu to select the search criteria, and enter a value, to narrow down the lists, and show requests from a specific store, district, or region.</p>	
+<form name="admin_filter" method="post" action="<?php echo "$PHP_SELF?page=admin-g2"; ?>">
+<select name="filter">
+<option value="tracking">Tracking Number</option>
+<option value="store_number">Store Number</option>
+<option value="store_district">Store District</option>
+<option value="store_region">Store Region</option>
+
+</select>
+<input type="text" name="var" />
+<input type="submit" value="Go!" />
+</form>
+</div>
+
+
+<a name="pending"></a><h1>:: Pending Requests</h1>
+<div class="databox">
+<?php print "<a href=\"$PHP_SELF?page=admin-g2&sort=region_set\">Sort Into Region Colored Sets</a>"; ?>
+<p>These requests are still <strong>waiting to be answered</strong>. To write a response just click on the request type link. You can expand the request and see more information regarding the request.</p>
+<?php
+	dbConnect();
+	if ($unique_user_id == "195") {
+		$sql = "select * from repair_orders where status = 'pending' ";
+		if (isset($_POST['filter'])) { $sql .= $filter_sql; }
+		if ($region_filter) {
+		$sql .= "order by $sortmethod";
+		} else {
+		$sql .= "and store_region < 4 order by $sortmethod";
+		}
+	} elseif ($unique_user_id == "266") {
+		$sql = "select * from repair_orders where status = 'pending' ";
+		if (isset($_POST['filter'])) { $sql .= $filter_sql; }
+		if ($region_filter) {
+		$sql .= "order by $sortmethod";
+		} else {
+		$sql .= "and store_region > 3 order by $sortmethod";
+	    }
+	} else {
+		$sql = "select * from repair_orders where status = 'pending' ";
+		if (isset($_POST['filter'])) { $sql .= $filter_sql; }
+		$sql .= "order by $sortmethod";		
+	}
+	$result = mysql_query($sql);
+	if (!$result) 	{
+		error("A databass error has occured.$user_uid_rank $user_domain\\n".mysql_error());
+	}
+	
+	if (mysql_num_rows($result) == 0) {
+		print "<p><strong>Notice:</strong> It appears that there are currently no pending requests<em>!!</em></p>";
+	} else {
+	print "<div class=\"sortbox\">";
+	print start_table();
+	$count=0;
+	
+//Cultivate data set
+	while ($row = mysql_fetch_array($result))
+	{
+	$id = $row["id"];
+	$project_id = $row["project_id"];
+	//$subject = $row["subject"];
+	$body  = $row["body"];
+	$author = $row["author"];
+	$type = $row["type"];
+	$priority = $row["priority"];
+	$tracking = $row["tracking"];
+	$contact_name = $row["contact_name"];
+	$contact_number = $row["contact_number"];
+	$store_number = $row["store_number"];
+	$store_district = $row["store_district"];
+	$store_region = $row["store_region"];
+	$ts = $row["timestamp"];
+	 	$ts = revertTimestamp($ts);
+	$issue_date = $row["issue_date"];
+
+
+	$box_report = "";
+	$box_report .= "<p style=\"margin:0 4 0 4;color:#333;\">{$row["body"]}<br /><br />";
+	$box_report .= "<small><strong>Tracking:</strong> $tracking</small><br />";
+	$box_report .= "<small><strong>Type:</strong> $type</small><br />";	
+	$box_report .= "<small><strong>Priority:</strong> $priority<br />";
+	$box_report .= "<strong>Contact Name: </strong>{$row["contact_name"]}<br />";
+	$box_report .= "<strong>Contact Number: </strong>{$row["contact_number"]}</small><br />";
+	$box_report .= "</p>";
+	
+	//Get location details for this request based on project_id
+	$location_result = mysql_query("select * from projects where id=$project_id");
+	  while($row = mysql_fetch_array($location_result)) {
+			 	$sitename = $row["sitename"];
+			 	$siteaddress = $row["siteaddress"];
+			 	$siteaddress2 = $row["siteaddress2"];
+			 	$sitecity = $row["sitecity"];
+			 	$sitestate = $row["sitezip"];
+				}	 
+	$flag = "<a href=\"#boxy_".$id."\" title=\"Expand\" onClick=\"javascript:toggleBox('$id',1);\"><img src=\"images/expand.gif\" border=\"0\" align=\"top\" /></a>&nbsp;<strong>$sitename</strong>&nbsp;[<a href=\"index.php?page=project&id=$project_id\" title=\"Project Page\">?</a>]&nbsp;";
+	print "<td class=\"project\"><small>$store_number &nbsp;</small></td>";
+	print "<td class=\"project\"><small>$store_district &nbsp;</small></td>";
+	print "<td class=\"project\"><small><span";
+	if ($region_classes) {
+			echo " class=\"reg_$store_region\"";
+		}
+	print ">$store_region</span>&nbsp;</small></td>";
+	print "<td class=\"project\"><small>$issue_date&nbsp;</small></td>";
+	print "<td class=\"project\">$flag<br />";
+	print "<a name=\"boxy_".$id."\"></a><div id =\"$id\" style=\"display:none;margin-left:17px;\" class=\"bigshinybutton\">";
+	print "<span style=\"float:right;\"><a href=\"#\" title=\"Close\"  onClick=\"javascript:toggleBox('$id',0);\"><img src=\"images/close.gif\" border=\"0\" /></a></span>";
+	print "<p>$box_report</p>";
+	print "<small>[<a href=\"$PHP_SELF?page=admin-g2&mode=respond&id=$id\">Write a response to this request</a>] or </small>";
+	print "<small>[<a href=\"$PHP_SELF?page=admin-g2&mode=trash&id=$id\">Trash This Request</a>]</small>";
+	print "</div>";
+	print "<br /></td>";
+	print "<td><strong><a href=\"$PHP_SELF?page=admin-g2&mode=respond&id=$id\">$type</a></strong></td>";
+	print "<td><small>$priority</small></td>";
+	print "</tr>";
+	}
+	echo "</table></div>";
+}
+?>
+</div>
+<a name="uncleared"></a><h1>:: Uncleared Requests</h1>
+<div class="databox">
+<?php print "<a href=\"$PHP_SELF?page=admin-g2&sort=region_set\">Sort Into Region Colored Sets</a>"; ?>
+<p>These are requests that <strong>have been answered</strong>. The DM or RM must clear the response.</p>
+<?php
+	dbConnect();
+	if ($unique_user_id == "195") {
+		$sql = "select * from repair_orders where status = 'answered' ";
+		if (isset($_POST['filter'])) { $sql .= $filter_sql; }
+		if ($region_filter) {
+		$sql .= "order by $sortmethod";
+		} else {
+		$sql .= "and store_region < 4 order by $sortmethod";
+		}
+	} elseif ($unique_user_id == "266") {
+		$sql = "select * from repair_orders where status = 'answered' ";
+		if (isset($_POST['filter'])) { $sql .= $filter_sql; }
+		if ($region_filter) {
+		$sql .= "order by $sortmethod";
+		} else {	
+		$sql .= "and store_region > 3 order by $sortmethod";
+		}
+	} else {
+		$sql = "select * from repair_orders where status = 'answered' ";
+		if (isset($_POST['filter'])) { $sql .= $filter_sql; }
+		$sql .= "order by $sortmethod";		
+	}	
+	
+	$result = mysql_query($sql);
+	if (!$result)
+	{
+	error("A databass error has occured.$user_uid_rank $user_domain\\n".mysql_error());
+	}
+	
+	if (mysql_num_rows($result) == 0) {
+		print "<p><strong>Notice:</strong> It appears that there are currently no recently cleared requests<em>!!</em></p>";
+	} else {
+	print "<div class=\"sortbox\">";
+	print start_table();
+	$count=0;
+	
+//Cultivate data set
+	while ($row = mysql_fetch_array($result))
+	{
+	$id = $row["id"];
+	$project_id = $row["project_id"];
+	//$subject = $row["subject"];
+	$body  = $row["body"];
+	$author = $row["author"];
+	$type = $row["type"];
+	$priority = $row["priority"];
+	$tracking = $row["tracking"];
+	$contact_name = $row["contact_name"];
+	$contact_number = $row["contact_number"];
+	$store_number = $row["store_number"];
+	$store_district = $row["store_district"];
+	$store_region = $row["store_region"];	
+	$ts = $row["timestamp"];
+	 	$ts = revertTimestamp($ts);
+	$issue_date = $row["issue_date"];
+	 	
+	$box_report = "";
+	$box_report .= "<small><strong>Tracking:</strong> $tracking</small><br />";		
+	$box_report .= "<small><strong>Type:</strong> $type</small><br />";
+	$box_report .= "<small><strong>Priority:</strong> $priority</small><br />";
+	$box_report .= "<p style=\"margin:0 4 0 4;color:#333;\">{$row["body"]}<br /><br />";
+	$box_report .= "<strong>Contact Name: </strong>{$row["contact_name"]}<br />";
+	$box_report .= "<strong>Contact Number: </strong>{$row["contact_number"]}<br />";
+	$box_report .= "</p>";
+	
+
+	//Get location details for this request based on project_id
+	$location_result = mysql_query("select * from projects where id=$project_id");
+	  while($row = mysql_fetch_array($location_result)) {
+			 	$sitename = $row["sitename"];
+				}	 
+	
+				$response_result = mysql_query("select * from repair_orders where status = 'response' and parent=$id");
+//			    if (mysql_num_rows($response_result)!=0) {
+			    while($srow = mysql_fetch_array($response_result)) {
+					 	$author = $srow["author"];
+					 	$body = $srow["body"];
+						$vendor = $srow["vendor"];
+						$po_num = $srow["po_num"];
+		 				$response_ts = $srow["timestamp"];
+			 			$response_ts = revertTimestamp($response_ts);					 	
+	//			    $resobjs = mysql_fetch_object($response_data);
+				    $box_report .= "<div style=\"margin-bottom: 5px;background:#eee;border:1px #ddd solid;\">";
+				    $box_report .= "<p><small>Response from ".$author." on ".$response_ts."</small><br />".$body."<br /></p>";
+					if ($vendor != "") {
+						$vendor_report = "<small><strong>Vendor:</strong> $vendor</small><br />";
+						$box_report .= $vendor_report;
+						}
+					if ($po_num != "") {
+						$po_report = "<small><strong>PO:</strong> $po_num</small>";
+						$box_report .= $po_report;
+						}
+					$box_report .= "</div>";
+
+					}
+
+
+	$flag = "<a href=\"#box_".$id."\" title=\"Expand\" onClick=\"javascript:toggleBox('$id',1);return true;\"><img src=\"images/expand.gif\" border=\"0\" align=\"top\" />&nbsp;<strong>$sitename</a>&nbsp;[<a href=\"index.php?page=project&id=$project_id\" title=\"Project Page\">?</a>]</strong> &nbsp;";
+	print "<tr>";
+	print "<td class=\"project\"><small>$store_number &nbsp;</small></td>";
+	print "<td class=\"project\"><small>$store_district &nbsp;</small></td>";
+	print "<td class=\"project\"><small><span";
+	if ($region_classes) {
+			echo " class=\"reg_$store_region\"";
+		}
+	print ">$store_region</span>&nbsp;</small></td>";	
+	print "<td class=\"project\"><small>$issue_date&nbsp;</small></td>";
+	print "<td class=\"project\">$flag</td>";
+	print "<td><strong><a href=\"$PHP_SELF?page=admin-g2&mode=respond&id=$id\">$type</a></strong></td>";
+	print "<td><small>$priority</small></td>";
+	print "</tr>";
+	print "<tr class=\"noline\"><td></td><td></td><td></td><td></td><td colspan=\"3\">";
+		print "<a name=\"box_$id\"></a><div id=\"$id\" style=\"display: none;margin-left:17px;\" class=\"bigshinybutton\">";
+				print "<span style=\"float:right;\">";
+					print "<a href=\"#\" title=\"Close\" onClick=\"javascript:toggleBox('$id',0);\"><img src=\"images/close.gif\" border=\"0\" /></a>";
+				print "</span>";
+			print "<p>$box_report</p>";
+			print "<small>[<a href=\"$PHP_SELF?page=admin-g2&do=clear&id=$id\">Clear this repair order request!</a>] ";
+			print "[<a href=\"$PHP_SELF?page=admin-g2&mode=respond&id=$id\">Submit an additional response</a>]</small>";
+		print "</div>";
+	print "</td></tr>";	
+	}
+	echo "</table></div>";
+}
+?>
+</div>
+<a name="cleared"></a><h1>:: Recently Cleared Requests</h1>
+<div class="databox"><p>You can use the search form below to lookup old repair order requests.</p>
+<form name="archive_filter" method="post" action="<?php echo "$PHP_SELF?page=g2-archive"; ?>">
+<select name="filter">
+<option value="">-Select-</option>
+<option value="store_number">Store Number</option>
+<option value="store_district">Store District</option>
+<option value="store_region">Store Region</option>
+<option value="tracking">Tracking Number</option>
+</select>
+<input type="text" name="var" />
+<input type="submit" value="Go!" />
+</form>
+
+<p>These are the 10 most recent cleared repair order requests and the responses issued. <a href="<?php echo "$PHP_SELF?page=g2-archive"; ?>">View all older requests here.</a></p>
+<?php
+	dbConnect();
+	$sql = "select * from repair_orders where status = 'clear'  order by $sortmethod limit 10";
+	$result = mysql_query($sql);
+	if (!$result)
+	{
+	error("A databass error has occured.$user_uid_rank $user_domain\\n".mysql_error());
+	}
+	
+	if (mysql_num_rows($result) == 0) {
+		print "<p><strong>Notice:</strong> It appears that there are currently no recently cleared requests<em>!!</em></p>";
+	} else {
+	print "<div class=\"sortbox\">";
+	print start_table();
+	$count=0;
+	
+//Cultivate data set
+	while ($row = mysql_fetch_array($result))
+	{
+	$id = $row["id"];
+	$project_id = $row["project_id"];
+	$body  = $row["body"];
+	$author = $row["author"];
+	$type = $row["type"];
+	$priority = $row["priority"];
+	$contact_name = $row["contact_name"];
+	$contact_number = $row["contact_number"];
+	$store_number = $row["store_number"];
+	$store_district = $row["store_district"];
+	$store_region = $row["store_region"];	
+	$ts = $row["timestamp"];
+	 	$ts = revertTimestamp($ts);
+	 $issue_date = $row["issue_date"];
+	
+	$box_report = "";
+	$box_report .= "<small><strong>Type:</strong> $type</small><br />";	
+	$box_report .= "<small><strong>Priority:</strong> $priority</small><br />";
+	$box_report .= "<p style=\"margin:0 4 0 4;color:#333;\">{$row["body"]}<br /><br />";
+	$box_report .= "<strong>Contact Name: </strong>{$row["contact_name"]}<br />";
+	$box_report .= "<strong>Contact Number: </strong>{$row["contact_number"]}<br />";
+	$box_report .= "</p>";
+	
+
+	//Get location details for this request based on project_id
+	$location_result = mysql_query("select * from projects where id=$project_id");
+	  while($row = mysql_fetch_array($location_result)) {
+			 	$sitename = $row["sitename"];
+
+				}	 
+	
+				$response_result = mysql_query("select * from repair_orders where status = 'response' and parent=$id");
+//			    if (mysql_num_rows($response_result)!=0) {
+			    while($row = mysql_fetch_array($response_result)) {
+					 	$author = $row["author"];
+					 	$body = $row["body"];
+						$vendor = $row["vendor"];
+						$po_num = $row["po_num"];						
+		 				$ts = $row["timestamp"];
+			 			$ts = revertTimestamp($ts);					 	
+	//			    $resobjs = mysql_fetch_object($response_data);
+				    $box_report .= "<div style=\"background:#eee;border:1px #ddd solid;\">";
+				    $box_report .= "<p><small>Response from ".$author." on ".$ts."</small><br />".$body."<br /></p>";
+					if ($vendor != "") {
+						$vendor_report = "<small><strong>Vendor:</strong> $vendor</small><br />";
+						$box_report .= $vendor_report;
+						}
+					if ($po_num != "") {
+						$po_report = "<small><strong>PO:</strong> $po_num</small>";
+						$box_report .= $po_report;
+						}
+					$box_report .= "</div>";
+				 	$box_report .= "<div style=\"border-bottom: 1px solid #ccc;\"></div>";
+					}
+
+				
+	$flag = "<a href=\"#box_".$id."\" title=\"Expand\"  onClick=\"javascript:toggleBox('box_".$id."',1);\"><img src=\"images/expand.gif\" border=\"0\" align=\"top\" /></a>&nbsp;<strong>$sitename&nbsp;[<a href=\"index.php?page=project&id=$project_id\" title=\"Project Page\">?</a>]</strong> &nbsp;";
+	print "<td class=\"project\"><small>$store_number &nbsp;</small></td>";
+	print "<td class=\"project\"><small>$store_district &nbsp;</small></td>";
+	print "<td class=\"project\"><small>$store_region &nbsp;</small></td>";		
+	print "<td class=\"project\"><small>$issue_date&nbsp;</small></td>";
+	print "<td class=\"project\">$flag</td>";
+	print "<td><strong><a href=\"$PHP_SELF?page=admin-g2&mode=respond&id=$id\">$type</a></strong></td>";
+	print "<td><small>$priority</small></td>";
+	print "</tr>";
+	print "<tr class=\"noline\"><td></td><td></td><td></td><td></td><td colspan=\"3\">";
+	print "<a name=\"box_".$id."\"></a><div id =\"box_".$id."\" style=\"display:none;margin-left:17px;\" class=\"bigshinybutton\">";
+	print "<span style=\"float:right;\"><a href=\"#\" title=\"Close\"  onClick=\"javascript:toggleBox('box_".$id."',0);\"><img src=\"images/close.gif\" border=\"0\" /></a></span>";
+	print "<p>$box_report</p>";
+	print "</div>";
+	print "</td></tr>";
+	}
+	echo "</table></div>";
+}
+?>
+</div>
+</div>
+
+<?php
+break;
+}
+	
+	} else {
+echo "You do not have sufficient privledges to view this page";
+exit;
+}
+
+
+$time_end = microtime_float();
+$time = $time_end - $time_start;
+$time = round($time, 3);
+
+echo "<p><small>Loaded in $time seconds\n</small></p>";
+?>

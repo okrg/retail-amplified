@@ -1,0 +1,243 @@
+<?
+if (!isset($sort)) {$sortstyle = "Region";} else {$sortstyle = $sort;}
+	switch ($sort) {
+		case "datetouched": $sortstyle="date last modified"; $sort = "datetouched desc";break;
+		case "store_region": $sortstyle="store region";break;
+		case "sitenum": $sortstyle="job number";break;
+		case "store_district": $sortstyle="store district";break;
+		case "store_number": $sortstyle="store number";break;
+		case "sitename": $sortstyle="location name";break;
+		case "chain": $sortstyle="store chain";break;
+		default: $sortstyle="date last modified"; $sort = "datetouched desc";break;	
+		}
+?>
+<div id="content">
+<h1>:: Announcement</h1><a name="announce"></a>
+<div class="databox">
+<?php
+
+	dbConnect();
+	
+	if ($usergroup == 3) {
+	$sql = "select * from blog where readers='vendors'";
+} else {
+	$sql = "select * from blog where readers='users'";
+}
+	$result = mysql_query($sql);
+	if (!result)
+		error("A databass error has occured in processing your request.\\n". mysql_error());
+	while ($row = mysql_fetch_array($result)) {
+		$id = $row["id"];
+		$ts = $row["ts"];
+			$ts = revertTimestamp($ts);
+		$subject = $row["subject"];
+		$body= $row["body"];
+			$body = stripslashes($body);
+			$body = nl2br($body);
+		$author = $row["author"];
+	}
+?>
+<h2><?=$subject?></h2>
+<p><small>Posted by <?=$author?> on <?=$ts?></small></p>
+<p><?=$body?></p>
+<?php
+if ($usergroup == 0) {
+	echo "<p>[<a href=\"$PHP_SELF?page=edit-announce&readers=users\">Edit this announcement</a>]&nbsp;&nbsp;";
+		echo "[<a href=\"$PHP_SELF?page=edit-announce&readers=vendors\">Edit the vendor announcement?</a>]</p>";
+	}
+?>
+</div>
+
+<?php
+if ($usergroup < 2) { //don't show this weekly report to vendors.
+	include("home_weeklyreport.php");
+}
+?>	
+
+
+<h1>:: Project List</h1><a name="projects"></a>
+<div class="databox">
+<p>Listed below are the active construction projects which have been entered into the system made available for view. Only administrators can modify projects and grant access to vendors.</p>
+<?php
+	echo "<p>";
+	if ($usergroup < 2) {
+		print "[<a href=\"index.php?page=archive\">List All Stores</a>]";
+	}
+	if ($usergroup == 0) {
+	echo " [<a href=\"$PHP_SELF?page=new-project&chain=1&status=1\">Add new project</a>]</p>";
+	}
+	echo "</p>";
+//Charlotte-Russe box
+	echo "<h2>Charlotte-Russe: Active Stores</h2><a name=\"char\"></a>";
+	if (isset($sort)) { echo "Sorted by $sortstyle";}
+	
+	dbConnect();
+//Vendor filter, vendors only see projects that have them tagged as vendors for that project
+	if ($usergroup == 3) {
+//		$sql = "select id from users where userid = '$uid' and pwd = '$pwd'";
+//		$result = mysql_query($sql);
+//		if (!$result) {error("A database error occured:".mysql_error());}
+//		$vendorID = mysql_result($result,0,"id");
+
+		$sql = "SELECT * FROM projects WHERE `companyarray` LIKE '%:\"".$usercompany."\";%'  and chain=1 and project_status='active' order by sitename desc";
+		} else {
+//All other useres get the full list
+		$sql = "select * from projects where chain=1 and project_status='active' order by $sort";
+	}
+//Execute filter on db!
+	$result = mysql_query($sql);
+
+	if (!$result)
+	{
+	error("A databass error has occured.\\n".mysql_error());
+	}
+	
+	if (mysql_num_rows($result) == 0) {
+		print "<p><strong>Notice:</strong> It appears that there are currently no projects which you have been granted access to. Check back at a later date<em>!!</em></p>";
+	} else {
+	print "<div class=\"sortbox\">";
+	print "<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\">";
+	print "<tr>";
+	print "<th width=\"90\"><a href=\"$PHP_SELF?sort=datetouched#char\">Last Modified</a></th>";
+	print "<th><a href=\"$PHP_SELF?sort=store_region#char\">Region</a></th>";
+	print "<th><a href=\"$PHP_SELF?sort=store_district#char\">District</a></th>";
+	print "<th><a href=\"$PHP_SELF?sort=store_number#char\">Store #</a></th>"; 
+	print "<th><a href=\"$PHP_SELF?sort=sitename#char\">Location Name</a></th>";
+	print "<th><a href=\"$PHP_SELF?sort=sitenum#char\">Job #</a></th>";
+	print "</tr>";
+	$count=0;
+	
+//Cultivate data set
+	while ($row = mysql_fetch_array($result))
+	{
+	$id = $row["id"];
+	$store_number = $row["store_number"];
+	$store_region = $row["store_region"];
+	$store_district = $row["store_district"];
+	$sitename = $row["sitename"];
+	$sitenum = $row["sitenum"];
+	$datetouched = $row["datetouched"];
+	$datetouched = dateconvert($datetouched);
+	$count++;	
+	print "<tr><td class=\"project\">$datetouched &nbsp;</td>";
+	print "<td class=\"project\">$store_region&nbsp;</td>";
+	print "<td class=\"project\">$store_district&nbsp;</td>";
+	print "<td class=\"project\">$store_number &nbsp;</td>";
+	print "<td class=\"project\"><a href=\"$PHP_SELF?page=project&id=$id\">$sitename</a> &nbsp;</td>";
+	print "<td class=\"project\">$sitenum</td>";
+	print "</tr>";
+	
+	if ($count == 40) {
+				print "<tr>";
+				print "<th width=\"90\"><a href=\"$PHP_SELF?sort=datetouched#char\">Last Modified</a></th>";
+				print "<th><a href=\"$PHP_SELF?sort=store_region#char\">Region</a></th>";
+				print "<th><a href=\"$PHP_SELF?sort=store_district#char\">District</a></th>";
+				print "<th><a href=\"$PHP_SELF?sort=store_number#char\">Store #</a></th>"; 
+				print "<th><a href=\"$PHP_SELF?sort=sitename#char\">Location Name</a></th>";
+				print "<th><a href=\"$PHP_SELF?sort=sitenum#char\">Job #</a></th>";
+				print "</tr>";
+				$count=0;		
+				}
+	}
+	echo "</table></div>";
+	echo "<p>";
+	if ($usergroup < 2) {
+		print "[<a href=\"index.php?page=archive\">List All Stores</a>]";
+	}
+	if ($usergroup == 0) {
+	echo " [<a href=\"$PHP_SELF?page=new-project&chain=1&status=1\">Add new project</a>]</p>";
+	}
+	echo "</p>";
+}
+
+
+//Rampage box
+	echo "<h2>Rampage: Active Stores</h2><a name=\"ramp\"></a>";
+	if (isset($sort)) { echo "Sorted by $sortstyle";}
+//Vendor filter, vendors only see projects that have them tagged as vendors for that project
+	if ($usergroup == 3) {
+//		$sql = "select id from users where userid = '$uid' and pwd = '$pwd'";
+//		$result = mysql_query($sql);
+//		if (!result) {error("A database error occured:".mysql_error());}
+//		$vendorID = mysql_result($result,0,"id");
+		$sql = "SELECT * FROM projects WHERE `companyarray` LIKE '%:\"".$usercompany."\";%'  and chain=2 and project_status='active' order by sitename desc";
+		} else {
+//All other useres get the full list
+		$sql = "select * from projects where chain=2 and project_status='active' order by sitename desc";
+	}
+//Execute filter on db!
+	$result = mysql_query($sql);
+
+	if (!result)
+	{
+	error("A databass error has occured.\\n".mysql_error());
+	}
+	
+	if (mysql_num_rows($result) == 0) {
+		print "<p><strong>Notice:</strong> It appears that there are currently no projects which you have been granted access to. Check back at a later date<em>!!</em></p>";
+	} else {
+	print "<div class=\"sortbox\">";
+	print "<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\">";
+	print "<tr>";
+	print "<th width=\"90\"><a href=\"$PHP_SELF?sort=datetouched#ramp\">Last Modified</a></th>";
+	print "<th><a href=\"$PHP_SELF?sort=store_region#ramp\">Region</a></th>";
+	print "<th><a href=\"$PHP_SELF?sort=store_district#ramp\">District</a></th>";
+	print "<th><a href=\"$PHP_SELF?sort=store_number#ramp\">Store #</a></th>"; 
+	print "<th><a href=\"$PHP_SELF?sort=sitename#ramp\">Location Name</a></th>";
+	print "<th><a href=\"$PHP_SELF?sort=sitenum#ramp\">Job #</a></th>";	
+	print "</tr>";
+	$count=0;
+	
+//Cultivate data set
+	while ($row = mysql_fetch_array($result))
+	{
+	$id = $row["id"];
+	$store_number = $row["store_number"];
+	$store_region = $row["store_region"];
+	$store_district = $row["store_district"];
+	$sitename = $row["sitename"];
+	$sitenum = $row["sitenum"];
+	$datetouched = $row["datetouched"];
+	$datetouched = dateconvert($datetouched);
+	$count++;	
+	print "<tr><td class=\"project\">$datetouched &nbsp;</td>";
+	print "<td class=\"project\">$store_region&nbsp;</td>";
+	print "<td class=\"project\">$store_district&nbsp;</td>";
+	print "<td class=\"project\">$store_number &nbsp;</td>";
+	print "<td class=\"project\"><a href=\"$PHP_SELF?page=project&id=$id\">$sitename</a> &nbsp;</td>";
+	print "<td class=\"project\">$sitenum</td>";
+	print "</tr>";
+	
+	if ($count == 40) {
+				print "<tr>";
+				print "<th><a href=\"$PHP_SELF?sort=datetouched#ramp\">Last Modified</a></th>";
+				print "<th><a href=\"$PHP_SELF?sort=store_region#ramp\">Region</a></th>";
+				print "<th><a href=\"$PHP_SELF?sort=store_district#ramp\">District</a></th>";
+				print "<th><a href=\"$PHP_SELF?sort=store_number#ramp\">Store #</a></th>"; 
+				print "<th><a href=\"$PHP_SELF?sort=sitename#ramp\">Location Name</a></th>";
+				print "<th><a href=\"$PHP_SELF?sort=sitenum#ramp\">Job #</a></th>";
+				print "</tr>";
+				$count=0;		
+				}
+	}
+	echo "</table></div>";
+}
+	echo "<p>";
+	if ($usergroup < 2) {
+		print "[<a href=\"index.php?page=archive\">List All Projects</a>]";
+	}
+	if ($usergroup == 0) {
+	echo " [<a href=\"$PHP_SELF?page=new-project&chain=2&status=1\">Add new project</a>]</p>";
+	}
+	echo "</p>";
+
+?>
+
+</div>
+
+
+
+
+</div>
+
+

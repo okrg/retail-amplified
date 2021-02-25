@@ -1,0 +1,11 @@
+#menu {display:none;}
+table#output {width:auto;border-right:1px #666 solid;border-bottom:1px #666 solid;font-family:Georgia;}
+table#output td {border-left:1px #666 solid;font-size:9pt;}
+table#output tr.header td {border-bottom:1px #666 solid;border-top:2px #666 solid;font-size:7pt;font-weight:bold;}
+table#output tr.fixture td {border-top:1px #666 solid;font-size:7pt;}
+table#output th {border-left:1px #666 solid;border-top:1px #666 solid;font-size:7pt;background:#ddd;}
+table#output td.realbody {background:#eee;}
+table#output td.realbody p {padding:4px;margin:0;width:90%;}
+.summary {font-size: 0;}
+table#output td.summary a {font-size:0;line-height:0;}
+table#output td.summary img {display:none;}

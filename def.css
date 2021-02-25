@@ -1,0 +1,238 @@
+body {
+	margin:0px;
+	padding:0px;
+	font-family: verdana, helvetica, sans-serif;
+	color:#333;
+	background-color:white;
+	}
+h1 {
+	margin:0px 0px 0px 0px;
+	padding:0px;
+	font-size:30px;
+	font-weight:900;
+	color:#ccc;
+	}
+h2 {
+	margin:0px 0px 8px 0px;
+	padding:0px;
+	font-size:18px;
+	line-height:18px;
+	color:#333;
+	}
+h3 {
+	margin:0px 0px 0px 0px;
+	padding:0px;
+	font-weight:bold;
+	font-size:14px;
+	color:#ff3300;
+	}
+th.files {
+	font-family:11px helvetica, arial, sans-serif;
+	font-weight:bold;
+	border-right:3px #666 dashed;
+	border-bottom:1px #666 dashed;
+	background: #eee url(images/bggrad.jpg) repeat-x top;
+	height:24px;
+	padding: 2px 4px 2px 4px;
+	}
+td.files {
+	padding: 0px 4px 0px 4px;
+	font-size:12px;
+	font-family: arial, helvetica, sans-serif;
+	border:1px #666 dashed;
+	}
+td.patt {
+	background: #eee url(images/bgpat.gif);
+	height:10px;
+}
+html\:abbr, abbr {
+	border-bottom: 1px dotted #999;
+	cursor: help;
+	}
+	
+	
+td.project {
+	font:12px verdana, arial, helvetica, sans-serif;
+	padding: 6px;
+	font-weight:normal;
+	border-top:1px #ccc dotted;
+}	
+p {
+	font:12px verdana, arial, helvetica, sans-serif;
+	margin:4px 0px 16px 0px;
+	padding:0px;
+	text-align:left;
+	}
+
+a {
+	color:#09c;
+	font-size:11px;
+	text-decoration:none;
+	font-weight:600;
+	font-family:arial, helvetica, sans-serif;
+	}
+a:link {color:#07a;}
+a:visited {color:#07a;}
+a:hover {color:#09c;}
+
+a.files {
+	color:#09c;
+	font-size:12px;
+	text-decoration:none;
+	font-family: arial, helvetica, sans-serif;
+	font-weight:600;
+		}
+a.files:link {color:#07a;}
+a.files:visited {color:#07a;}
+a.files:hover {color:#09c;text-decoration:underline;}
+
+#header {
+	margin:20px 0px 0px 0px;
+	padding:20px 0px 0px 0px;
+	height:50px;
+	border-style:solid;
+	border-color:black;
+	border-width:1px 0px; /* top and bottom borders: 1px; left and right borders: 0px */
+	font-family: verdana, arial, helvetica, sans-serif;
+	font-size: 11px;
+	line-height:11px;
+	background: #eee url('images/logo.gif') right no-repeat;
+	}
+
+#content {
+
+	margin:0px 50px 50px 50px;
+	padding:0px 10px;
+	}
+#mainMenu {
+  background-color: #EEE;
+  border-bottom: 1px solid #000;
+  color: #000;
+  margin: 0px;
+  padding: 0px 0px 2px 20px;
+}
+
+#menuList {
+  margin: 0px;
+  padding: 0px;
+}
+
+#menuList ul {
+  margin: 0px;
+  padding: 0px;
+}
+
+#menuList li {
+  display: inline;
+  list-style: none;
+}
+
+a.actuator {
+  background-color: transparent;
+  color: #000;
+  font-size: 11px;
+  margin: 0px;
+  padding: 2px 6px;
+  text-decoration: none;
+}
+
+a.actuator:hover {
+  background-color: #009;
+  color: #ccc;
+}
+
+.menu {
+  color: #000;
+  background-color: #EEE;
+  border: 1px solid #CCC;
+  position: absolute;
+  visibility: hidden;
+}
+
+.menu li a {
+  background-color: transparent;
+  color: #000;
+  display: block;
+  font-size: 10px;
+  line-height: 1.75em;
+  margin: 0px;
+  padding: 0px 10px;
+  text-decoration: none;
+}
+
+.menu li a:hover {
+  background-color: #009;
+  color: #EEE;
+}
+
+span.key {
+  text-decoration: underline;
+}
+
+#productsMenu { width: 165px; }
+#plansMenu { width: 160px; }
+#coverageMenu { width: 160px; }
+#companyInfoMenu { width: 165px; }
+#helpMenu { width: 150px; }
+
+
+
+input.files, textarea.files {
+	border:1px #999 solid;
+	color: #333;
+	font-family: verdana, arial, helvetica, sans-serif;
+	font-size: 10px;
+	}
+
+
+.databox	{
+	border:1px #09c solid;
+	text-align:left;
+	background: #eee;
+	padding:15px;
+	margin-bottom:40px;
+	}
+.data	{
+	position:relative;
+	margin:0px;
+	padding-left: 120px;
+	font-size: 12px;
+	padding-bottom:12px;
+	}
+.field	{
+	position:relative;
+	margin:0px;
+	float:left;
+	font-size:12px;
+	font-weight: bold;
+	text-align: right;
+	width: 110px;
+	padding-bottom:12px;
+	}
+.folderdetails {
+	background:#fff;
+	border-left:1px #369 solid;
+	border-right: 1px #369 solid;
+	border-bottom: 1px #ccc solid;
+	color: #333;
+	padding-left:25px;
+	padding-right:25px;
+	padding-bottom:12px;
+	font-size:12px
+}
+
+.filedetails {
+	background:#fff;
+	border-left:1px #369 solid;
+	border-right: 1px #369 solid;
+	border-bottom: 1px #ccc solid;
+	color: #333;
+	padding-left:25px;
+	padding-right:25px;
+	padding-bottom:12px;
+	font-size:12px;
+}
+.file	{
+	font-family: sans-serif, Verdana;
+	font-size:14px;
+}
