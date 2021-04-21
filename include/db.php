@@ -2,9 +2,15 @@
 $site = array('db' => 'demo', 'company' => 'DEMO Inc.', 'subdomain' => 'demo');
 
 $dbhost = 'localhost';
-$dbuser = 'root';
-$dbpass = 'root';
-$db = 'cnaapp';
+if($_SERVER['SERVER_NAME'] == 'cna-app.retailamp.net') {
+  $dbuser = 'cpdykrqqay';
+  $dbpass = 'S2qvaJGKff';
+  $db = 'cpdykrqqay';
+} else {
+  $dbuser = 'root';
+  $dbpass = 'root';
+  $db = 'cnaapp';
+}
 $sitename = 'Retail Amplified';
 $subdomain = 'cna-app';
 

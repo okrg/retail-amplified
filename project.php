@@ -42,16 +42,13 @@ $("#DrawingsFileTable td a:contains('MASTER DRAWING SET')").closest('tr').insert
 $("#DrawingsFileTable td a:contains('Master Drawing Set')").closest('tr').insertAfter( $('#DrawingsFileTable tr:first') );
 
 
-<?php if($can_edit): ?> 
-  
-  
-
+<?php if($can_edit): ?>
 
   function closeField() {
     //Return to init value...
-    $('.active-input').val( $('.active-input').attr('data-init-value') );       
+    $('.active-input').val( $('.active-input').attr('data-init-value') );
     $('.active-input').removeClass('active-input');
-    $('.active-controls').removeClass('active-controls');   
+    $('.active-controls').removeClass('active-controls');
     $('#field-btns').remove();
   }
 
@@ -284,6 +281,9 @@ $("#DrawingsFileTable td a:contains('Master Drawing Set')").closest('tr').insert
     <li class="nav-item">
       <a class="nav-link" href="#" data-toggle="modal" data-target="#new-comment-modal"><i class="fa fa-comment"></i> New Comment</a>
     </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#" data-toggle="modal" data-target="#modules-modal"><i class="fa fa-cog"></i> Modules</a>
+    </li>
   </ul>
 </div>
 
@@ -292,49 +292,79 @@ $("#DrawingsFileTable td a:contains('Master Drawing Set')").closest('tr').insert
   <div class="pane-content"><?php include('project_summary.php'); ?></div>
 </div>
 
+<?php 
+$project_modules = json_decode($project['project_modules']);
+?>
+
+<?php if($project_modules->construction_schedule): ?>
 <div class="pane closed" id="project-schedule">
-  <div class="pane-header">Schedule<span class="symbol"><i class="icon-chevron-right"></i></span></div>
+  <div class="pane-header">Construction Schedule<span class="symbol"><i class="icon-chevron-right"></i></span></div>
   <div class="pane-content"><?php include("project_schedule.php"); ?></div>
 </div>
+<?php endif; ?>
 
+
+<?php if($project_modules->tenant_coordination): ?>
+<div class="pane closed" id="project-schedule">
+  <div class="pane-header">Tenant Coordination<span class="symbol"><i class="icon-chevron-right"></i></span></div>
+  <div class="pane-content">
+    <?php include("project_tenant_coordination.php"); ?>
+  </div>
+</div>
+<?php endif; ?>
+
+<?php if($project_modules->real_estate_data): ?>
 <div class="pane closed" id="project-real-estate">
-    <div class="pane-header">Real Estate<span class="symbol"><i class="icon-chevron-right"></i></span></div>
+    <div class="pane-header">Real Estate Data<span class="symbol"><i class="icon-chevron-right"></i></span></div>
   <div class="pane-content"><?php include("realestate_summary.php"); ?></div>
 </div>
+<?php endif; ?>
 
+<?php if($project_modules->comments): ?>
 <div class="pane closed" id="project-comments">
   <div class="pane-header">Comments<span class="symbol"><i class="icon-chevron-right"></i></span></div>
   <div class="pane-content">
     <?php include("project_comments.php"); ?></div>
 </div>
+<?php endif; ?>
 
+<?php if($project_modules->files): ?>
 <div class="pane <?php if(isset($_GET['showDwgs'])) { echo 'open'; }else { echo  'closed';}?>" id="project-files">
   <div class="pane-header">Files<span class="symbol"><i class="icon-chevron-right"></i></span></div>
   <div class="pane-content">
   <?php include("project_downloads.php"); ?>
   </div>
 </div>
+<?php endif; ?>
 
+<?php if($project_modules->photos): ?>
 <div class="pane closed" id="project-photos">
   <div class="pane-header">Photos<span class="symbol"><i class="icon-chevron-right"></i></span></div>
   <div class="pane-content">
     <?php include("project_photos.php"); ?></div> 
 </div>
+<?php endif; ?>
 
+<?php if($project_modules->change_orders): ?>
 <div class="pane closed" id="project-cop">
   <div class="pane-header">COP Process <span class="symbol"><i class="icon-chevron-right"></i></span></div>
   <div class="pane-content">
     <?php include("cop_request_log.php"); ?></div>
 </div>
+<?php endif; ?>
 
+<?php if($project_modules->rfi): ?>
 <div class="pane closed" id="project-rfi">
   <div class="pane-header">RFI <span class="symbol"><i class="icon-chevron-right"></i></span></div>
   <div class="pane-content">
     <?php include("project_rfi.php"); ?></div>
 </div>
+<?php endif; ?>
 
   <?php include("project_new_comment.php"); ?>
   <?php include("project_uploads.php"); ?>
+  <?php include("project_modules.php"); ?>
+
 
 </div>
 

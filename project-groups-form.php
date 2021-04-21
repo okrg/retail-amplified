@@ -1,3 +1,7 @@
+<?php
+$project_groups = array();
+?>
+
 <form id="group-form">
 <div class="form-group">
   <h6>General Contractors</h6>

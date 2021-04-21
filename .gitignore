@@ -1,6 +1,6 @@
 *.zip
 scratch.php
-files/
+files/*
 logs
 *.log
 npm-debug.log*

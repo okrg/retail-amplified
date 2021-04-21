@@ -47,6 +47,7 @@ gulp.task('js', function() {
         'node_modules/slick-carousel/slick/slick.min.js',
         'node_modules/datatables.net/js/jquery.dataTables.min.js',
         'node_modules/datatables.net-bs4/js/dataTables.bootstrap4.min.js',
+        'node_modules/sortablejs/Sortable.min.js',
         //'node_modules/tablesorter/dist/js/jquery.tablesorter.min.js',
         //'node_modules/tablesorter/dist/js/jquery.tablesorter.widgets.min.js',
         'node_modules/@excellalabs/jquery-autonumeric-v1.9.17/autoNumeric.js',
@@ -84,12 +85,12 @@ gulp.task('serve', gulp.series('sass', function() {
 
   browserSync.init({
     // SET THIS TO YOUR LOCAL URL
-    proxy: 'http://cna-app:8888/'
+    proxy: 'http://retail-amplified:8888/'
   });
 
   gulp.watch("src/css/**/*.scss", gulp.series('sass'));
   gulp.watch("src/js/**/*.js", gulp.series('js'));
-  gulp.watch("includes/*.php").on('change', browserSync.reload);
+  gulp.watch("include/*.php").on('change', browserSync.reload);
   gulp.watch("*.php").on('change', browserSync.reload);
 }));
 

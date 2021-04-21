@@ -122,4 +122,4 @@ $(document).ready(function(){
     $('#wizard-message').append('<div>'+string+'</div>');
   }  
 });
-</script
+</script>

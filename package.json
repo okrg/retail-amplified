@@ -30,6 +30,7 @@
     "moment": "^2.22.2",
     "popper.js": "^1.16.1",
     "datatables.net-bs4": "^1.10.19",
-    "slick-carousel": "^1.8.1"
+    "slick-carousel": "^1.8.1",
+    "sortablejs": "^1.13.0"
   }
 }

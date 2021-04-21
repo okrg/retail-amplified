@@ -22,7 +22,6 @@ if(isset($_GET['page'])) {
 
 <script type="text/javascript">
 $(document).ready(function(){
-  
   $('ul.typeahead').on('mousedown', 'li', function(e) {
       e.preventDefault();
   });
@@ -36,20 +35,20 @@ $(document).ready(function(){
     $result = mysqli_query($dbcnx, $sql);
     if (!$result){error("A databass error has occured....\\n".mysqli_error($dbcnx));}
     if (mysqli_num_rows($result)>0) {
-      while ($row = mysqli_fetch_array($result)) {        
+      while ($row = mysqli_fetch_array($result)) {
         $itemVar = '';
-        
+
         if($row['store_number'] != '0') {
           $itemVar .= '#'. $row['store_number'] . ' - ';
         }
-        
+
         $itemVar .= $row['sitename'];
 
         if($row['project_type'] != '') {
           $itemVar .= ' [' . ucwords($row['project_type']) . ']';
         }
 
-        $jsondata[$itemVar] = $row['id'];        
+        $jsondata[$itemVar] = $row['id'];
       }
     }
   ?>
@@ -58,13 +57,13 @@ $(document).ready(function(){
 
   $('#search-query').typeahead({
     minLength:2,
-    updater: function (item) {          
+    updater: function (item) {
           window.location.href = '/index.php?page=project&id=' + storelist[item];
       },
     source: function (typeahead, query) {
       var stores=[];
       for (var sitename in storelist){
-          stores.push(sitename); 
+        stores.push(sitename);
       }
       return stores;
       }

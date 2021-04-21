@@ -1,47 +1,74 @@
 <?php //project_schedule.php
   
-  $query = "SELECT * FROM tracker WHERE id = ".mysqli_real_escape_string($dbcnx, $id);
-  $result = mysqli_query($dbcnx, $query) or die ("no query x1");  
-  $data = array();
-  while($row = mysqli_fetch_assoc($result)) {
-      $data[] = $row;
-  }
 
-  $tracker = $data[0];
 
 ?>
 
+
+<script>
+
+$(document).ready(function() {
+  $('.label i.fa-comment').click(function(){
+    $(this).next('.comment').toggleClass('hidden shown');
+  });
+
+  $('#note-summary-button').click(function(){
+    $(this).parent('.note-summary').toggleClass('hidden shown');
+  });
+
+});
+</script>
+
 <div id="tracker-schedule-form" class="p-2">
+
+  <div class="row mb-4">
+    <div class="col">
+      <div class="note-summary hidden">
+      <a id="note-summary-button" class="btn btn-sm btn-secondary">Note Summary</a>
+        <div class="notes">
+          <?php print $note_summary; ?>
+        </div>
+      </div>
+    </div>
+  </div>
 
 <table class="table">
 <tr>
-  <th class="stage">Stage</th>
   <th class="tracker-column">Lease</th>
   <th class="tracker-column">LL Work</th>
   <th class="tracker-column">TT Work</th>
 </tr>
-<!-- 1 -->
+
 <tr>
-  <td><div class="badge badge-primary">1</div></td>
   <td>
-    <div class="label">TT Deal Approval</div>
+    <div class="label">TT Deal Approved/LOI
+      <i class="fa fa-comment <?=hasTrackerNote('lease_tt_deal_approved_loi')?>"></i>
+      <div class="comment hidden">
+        <a href="#" class="edit" data-table="tracker" data-name="lease_tt_deal_approved_loi_note" data-type="textarea"><?=$tracker['lease_tt_deal_approved_loi_note'];?></a>
+      </div>
+    </div>
     <div class="date-fields">
       <div class="scheduled">Projected
-        <a href="#" class="edit-date" data-name="lease_tt_deal_approved_loi_scheduled" data-type="date" data-value="<?=dateFormat($tracker['lease_tt_deal_approved_loi_scheduled'])?>"></a>
+        <a href="#" class="edit-date" data-table="tracker" data-name="lease_tt_deal_approved_loi_scheduled" data-type="date" data-value="<?=dateFormat($tracker['lease_tt_deal_approved_loi_scheduled'])?>"></a>
       </div>
       <div class="actual">Actual
-        <a href="#" class="edit-date" data-name="lease_tt_deal_approved_loi_actual" data-type="date" data-value="<?=dateFormat($tracker['lease_tt_deal_approved_loi_actual'])?>"></a>
+        <a href="#" class="edit-date" data-table="tracker" data-name="lease_tt_deal_approved_loi_actual" data-type="date" data-value="<?=dateFormat($tracker['lease_tt_deal_approved_loi_actual'])?>"></a>
       </div>
     </div>
   </td>
   <td>
-    <div class="label">Scope Complete</div>
+    <div class="label">Scope Complete
+      <i class="fa fa-comment <?=hasTrackerNote('ll_scope_complete')?>"></i>
+      <div class="comment hidden">
+        <a href="#" class="edit" data-table="tracker" data-name="ll_scope_complete_note" data-type="textarea"><?=$tracker['ll_scope_complete_note'];?></a>
+      </div>
+    </div>
     <div class="date-fields">
       <div class="scheduled">Projected
-        <a href="#" class="edit-date" data-name="xxxx_scheduled" data-type="date" data-value="<?=dateFormat($tracker['xxxx_scheduled'])?>"></a>
+        <a href="#" class="edit-date" data-table="tracker" data-name="ll_scope_complete_scheduled" data-type="date" data-value="<?=dateFormat($tracker['ll_scope_complete_scheduled'])?>"></a>
       </div>
       <div class="actual">Actual
-        <a href="#" class="edit-date" data-name="xxxx_actual" data-type="date" data-value="<?=dateFormat($tracker['xxxx_actual'])?>"></a>
+        <a href="#" class="edit-date" data-table="tracker" data-name="ll_scope_complete_actual" data-type="date" data-value="<?=dateFormat($tracker['ll_scope_complete_actual'])?>"></a>
       </div>
     </div>
   </td>
@@ -49,58 +76,72 @@
     &nbsp;
   </td>
 </tr>
-<!-- 2 -->
+
 <tr>
   <td>
-    <div class="badge badge-primary">2</div>
-  </td>
-  <td>
-    <div class="label">LL Deal Approval</div>
+    <div class="label">LL Deal Approval
+      <i class="fa fa-comment <?=hasTrackerNote('lease_ll_deal_approval')?>"></i>
+      <div class="comment hidden">
+        <a href="#" class="edit" data-table="tracker" data-name="lease_ll_deal_approval_note" data-type="textarea"><?=$tracker['lease_ll_deal_approval_note'];?></a>
+      </div>
+    </div>
     <div class="date-fields">
       <div class="scheduled">Projected
-        <a href="#" class="edit-date" data-name="xxxx_scheduled" data-type="date" data-value="<?=dateFormat($tracker['xxxx_scheduled'])?>"></a>
+        <a href="#" class="edit-date" data-table="tracker" data-name="lease_ll_deal_approval_scheduled" data-type="date" data-value="<?=dateFormat($tracker['lease_ll_deal_approval_scheduled'])?>"></a>
       </div>
       <div class="actual">Actual
-        <a href="#" class="edit-date" data-name="xxxx_actual" data-type="date" data-value="<?=dateFormat($tracker['xxxx_actual'])?>"></a>
+        <a href="#" class="edit-date" data-table="tracker" data-name="lease_ll_deal_approval_actual" data-type="date" data-value="<?=dateFormat($tracker['lease_ll_deal_approval_actual'])?>"></a>
       </div>
     </div>
   </td>
   <td>
-    <div class="label">Scope Approved</div>
+    <div class="label">Scope Approved
+      <i class="fa fa-comment <?=hasTrackerNote('ll_scope_approval')?>"></i>
+      <div class="comment hidden">
+        <a href="#" class="edit" data-table="tracker" data-name="ll_scope_approval_note" data-type="textarea"><?=$tracker['ll_scope_approval_note'];?></a>
+      </div>
+    </div>
     <div class="date-fields">
       <div class="scheduled">Projected
-        <a href="#" class="edit-date" data-name="xxxx_scheduled" data-type="date" data-value="<?=dateFormat($tracker['xxxx_scheduled'])?>"></a>
+        <a href="#" class="edit-date" data-table="tracker" data-name="ll_scope_approval_scheduled" data-type="date" data-value="<?=dateFormat($tracker['ll_scope_approval_scheduled'])?>"></a>
       </div>
       <div class="actual">Actual
-        <a href="#" class="edit-date" data-name="xxxx_actual" data-type="date" data-value="<?=dateFormat($tracker['xxxx_actual'])?>"></a>
+        <a href="#" class="edit-date" data-table="tracker" data-name="ll_scope_approval_actual" data-type="date" data-value="<?=dateFormat($tracker['ll_scope_approval_actual'])?>"></a>
       </div>
     </div>
   </td>
   <td>
-    <div class="label">Criteria Sent</div>
+    <div class="label">Criteria Sent
+      <i class="fa fa-comment <?=hasTrackerNote('tt_criteria_manual_sent')?>"></i>
+      <div class="comment hidden">
+        <a href="#" class="edit" data-table="tracker" data-name="tt_criteria_manual_sent_note" data-type="textarea"><?=$tracker['tt_criteria_manual_sent_note'];?></a>
+      </div>
+    </div>
     <div class="date-fields">
       <div class="scheduled">Projected
-        <a href="#" class="edit-date" data-name="xxxx_scheduled" data-type="date" data-value="<?=dateFormat($tracker['xxxx_scheduled'])?>"></a>
+        <a href="#" class="edit-date" data-table="tracker" data-name="tt_criteria_manual_sent_scheduled" data-type="date" data-value="<?=dateFormat($tracker['tt_criteria_manual_sent_scheduled'])?>"></a>
       </div>
       <div class="actual">Actual
-        <a href="#" class="edit-date" data-name="xxxx_actual" data-type="date" data-value="<?=dateFormat($tracker['xxxx_actual'])?>"></a>
+        <a href="#" class="edit-date" data-table="tracker" data-name="tt_criteria_manual_sent_actual" data-type="date" data-value="<?=dateFormat($tracker['tt_criteria_manual_sent_actual'])?>"></a>
       </div>
     </div>
   </td>
 </tr>
-<!-- 3 -->
+
 <tr>
   <td>
-    <div class="badge badge-primary">3</div>
-  </td>
-  <td>
-    <div class="label">First Draft Lease</div>
+    <div class="label">First Draft Lease
+      <i class="fa fa-comment <?=hasTrackerNote('lease_first_draft_sent')?>"></i>
+      <div class="comment hidden">
+        <a href="#" class="edit" data-table="tracker" data-name="lease_first_draft_sent_note" data-type="textarea"><?=$tracker['lease_first_draft_sent_note'];?></a>
+      </div>
+    </div>
     <div class="date-fields">
       <div class="scheduled">Projected
-        <a href="#" class="edit-date" data-name="xxxx_scheduled" data-type="date" data-value="<?=dateFormat($tracker['xxxx_scheduled'])?>"></a>
+        <a href="#" class="edit-date" data-table="tracker" data-name="lease_first_draft_sent_scheduled" data-type="date" data-value="<?=dateFormat($tracker['lease_first_draft_sent_scheduled'])?>"></a>
       </div>
       <div class="actual">Actual
-        <a href="#" class="edit-date" data-name="xxxx_actual" data-type="date" data-value="<?=dateFormat($tracker['xxxx_actual'])?>"></a>
+        <a href="#" class="edit-date" data-table="tracker" data-name="lease_first_draft_sent_actual" data-type="date" data-value="<?=dateFormat($tracker['lease_first_draft_sent_actual'])?>"></a>
       </div>
     </div>
   </td>
@@ -108,30 +149,37 @@
     &nbsp;
   </td>
   <td>
-    <div class="label">Project Kickoff</div>
+    <div class="label">Project Kickoff
+      <i class="fa fa-comment <?=hasTrackerNote('tt_project_kickoff')?>"></i>
+      <div class="comment hidden">
+        <a href="#" class="edit" data-table="tracker" data-name="tt_project_kickoff_note" data-type="textarea"><?=$tracker['tt_project_kickoff_note'];?></a>
+      </div>
+    </div>
     <div class="date-fields">
       <div class="scheduled">Projected
-        <a href="#" class="edit-date" data-name="xxxx_scheduled" data-type="date" data-value="<?=dateFormat($tracker['xxxx_scheduled'])?>"></a>
+        <a href="#" class="edit-date" data-table="tracker" data-name="tt_project_kickoff_scheduled" data-type="date" data-value="<?=dateFormat($tracker['tt_project_kickoff_scheduled'])?>"></a>
       </div>
       <div class="actual">Actual
-        <a href="#" class="edit-date" data-name="xxxx_actual" data-type="date" data-value="<?=dateFormat($tracker['xxxx_actual'])?>"></a>
+        <a href="#" class="edit-date" data-table="tracker" data-name="tt_project_kickoff_actual" data-type="date" data-value="<?=dateFormat($tracker['tt_project_kickoff_actual'])?>"></a>
       </div>
     </div>
   </td>
 </tr>
-<!-- 4 -->
+
 <tr>
   <td>
-    <div class="badge badge-primary">4</div>
-  </td>
-  <td>
-    <div class="label">TT Lease Signed</div>
+    <div class="label">TT Lease Signed
+      <i class="fa fa-comment <?=hasTrackerNote('lease_tenant_signed_lease')?>"></i>
+      <div class="comment hidden">
+        <a href="#" class="edit" data-table="tracker" data-name="lease_tenant_signed_lease_note" data-type="textarea"><?=$tracker['lease_tenant_signed_lease_note'];?></a>
+      </div>
+    </div>
     <div class="date-fields">
       <div class="scheduled">Projected
-        <a href="#" class="edit-date" data-name="xxxx_scheduled" data-type="date" data-value="<?=dateFormat($tracker['xxxx_scheduled'])?>"></a>
+        <a href="#" class="edit-date" data-table="tracker" data-name="lease_tenant_signed_lease_scheduled" data-type="date" data-value="<?=dateFormat($tracker['lease_tenant_signed_lease_scheduled'])?>"></a>
       </div>
       <div class="actual">Actual
-        <a href="#" class="edit-date" data-name="xxxx_actual" data-type="date" data-value="<?=dateFormat($tracker['xxxx_actual'])?>"></a>
+        <a href="#" class="edit-date" data-table="tracker" data-name="lease_tenant_signed_lease_actual" data-type="date" data-value="<?=dateFormat($tracker['lease_tenant_signed_lease_actual'])?>"></a>
       </div>
     </div>
   </td>
@@ -142,275 +190,338 @@
   &nbsp;
   </td>
 </tr>
-<!-- 5 -->
+
 <tr>
   <td>
-    <div class="badge badge-primary">5</div>
-  </td>
-  <td>
-    <div class="label">LL Lease Signed</div>
+    <div class="label">LL Lease Signed
+      <i class="fa fa-comment <?=hasTrackerNote('lease_ll_signed_lease')?>"></i>
+      <div class="comment hidden">
+        <a href="#" class="edit" data-table="tracker" data-name="lease_ll_signed_lease_note" data-type="textarea"><?=$tracker['lease_ll_signed_lease_note'];?></a>
+      </div>
+    </div>
     <div class="date-fields">
       <div class="scheduled">Projected
-        <a href="#" class="edit-date" data-name="xxxx_scheduled" data-type="date" data-value="<?=dateFormat($tracker['xxxx_scheduled'])?>"></a>
+        <a href="#" class="edit-date" data-table="tracker" data-name="lease_ll_signed_lease_scheduled" data-type="date" data-value="<?=dateFormat($tracker['lease_ll_signed_lease_scheduled'])?>"></a>
       </div>
       <div class="actual">Actual
-        <a href="#" class="edit-date" data-name="xxxx_actual" data-type="date" data-value="<?=dateFormat($tracker['xxxx_actual'])?>"></a>
+        <a href="#" class="edit-date" data-table="tracker" data-name="lease_ll_signed_lease_actual" data-type="date" data-value="<?=dateFormat($tracker['lease_ll_signed_lease_actual'])?>"></a>
       </div>
     </div>
   </td>
   <td>
-    <div class="label">CD Start</div>
+    <div class="label">CD Start
+      <i class="fa fa-comment <?=hasTrackerNote('ll_cd_start')?>"></i>
+      <div class="comment hidden">
+        <a href="#" class="edit" data-table="tracker" data-name="ll_cd_start_note" data-type="textarea"><?=$tracker['ll_cd_start_note'];?></a>
+      </div>
+    </div>
     <div class="date-fields">
       <div class="scheduled">Projected
-        <a href="#" class="edit-date" data-name="xxxx_scheduled" data-type="date" data-value="<?=dateFormat($tracker['xxxx_scheduled'])?>"></a>
+        <a href="#" class="edit-date" data-table="tracker" data-name="ll_cd_start_scheduled" data-type="date" data-value="<?=dateFormat($tracker['ll_cd_start_scheduled'])?>"></a>
       </div>
       <div class="actual">Actual
-        <a href="#" class="edit-date" data-name="xxxx_actual" data-type="date" data-value="<?=dateFormat($tracker['xxxx_actual'])?>"></a>
+        <a href="#" class="edit-date" data-table="tracker" data-name="ll_cd_start_actual" data-type="date" data-value="<?=dateFormat($tracker['ll_cd_start_actual'])?>"></a>
       </div>
     </div>
   </td>
   <td>
-    <div class="label">Preliminary Drawings Complete</div>
+    <div class="label">Preliminary Drawings Complete
+      <i class="fa fa-comment <?=hasTrackerNote('tt_preliminary_drawings_complete')?>"></i>
+      <div class="comment hidden">
+        <a href="#" class="edit" data-table="tracker" data-name="tt_preliminary_drawings_complete_note" data-type="textarea"><?=$tracker['tt_preliminary_drawings_complete_note'];?></a>
+      </div>
+    </div>
     <div class="date-fields">
       <div class="scheduled">Projected
-        <a href="#" class="edit-date" data-name="xxxx_scheduled" data-type="date" data-value="<?=dateFormat($tracker['xxxx_scheduled'])?>"></a>
+        <a href="#" class="edit-date" data-table="tracker" data-name="tt_preliminary_drawings_complete_scheduled" data-type="date" data-value="<?=dateFormat($tracker['tt_preliminary_drawings_complete_scheduled'])?>"></a>
       </div>
       <div class="actual">Actual
-        <a href="#" class="edit-date" data-name="xxxx_actual" data-type="date" data-value="<?=dateFormat($tracker['xxxx_actual'])?>"></a>
+        <a href="#" class="edit-date" data-table="tracker" data-name="tt_preliminary_drawings_complete_actual" data-type="date" data-value="<?=dateFormat($tracker['tt_preliminary_drawings_complete_actual'])?>"></a>
       </div>
     </div>
   </td>
 </tr>
-<!-- 6 -->
+
 <tr>
   <td>
-    <div class="badge badge-primary">6</div>
+    &nbsp;
+  </td>
+  <td>
+    <div class="label">CD Approved
+      <i class="fa fa-comment <?=hasTrackerNote('ll_cd_approved')?>"></i>
+      <div class="comment hidden">
+        <a href="#" class="edit" data-table="tracker" data-name="ll_cd_approved_note" data-type="textarea"><?=$tracker['ll_cd_approved_note'];?></a>
+      </div>
+    </div>
+    <div class="date-fields">
+      <div class="scheduled">Projected
+        <a href="#" class="edit-date" data-table="tracker" data-name="ll_cd_approved_scheduled" data-type="date" data-value="<?=dateFormat($tracker['ll_cd_approved_scheduled'])?>"></a>
+      </div>
+      <div class="actual">Actual
+        <a href="#" class="edit-date" data-table="tracker" data-name="ll_cd_approved_actual" data-type="date" data-value="<?=dateFormat($tracker['ll_cd_approved_actual'])?>"></a>
+      </div>
+    </div>
+  </td>
+  <td>
+    <div class="label">Prelminary Drawings Approved
+      <i class="fa fa-comment <?=hasTrackerNote('tt_prelminary_drawings_approved')?>"></i>
+      <div class="comment hidden">
+        <a href="#" class="edit" data-table="tracker" data-name="tt_prelminary_drawings_approved_note" data-type="textarea"><?=$tracker['tt_prelminary_drawings_approved_note'];?></a>
+      </div>
+    </div>
+    <div class="date-fields">
+      <div class="scheduled">Projected
+        <a href="#" class="edit-date" data-table="tracker" data-name="tt_prelminary_drawings_approved_scheduled" data-type="date" data-value="<?=dateFormat($tracker['tt_prelminary_drawings_approved_scheduled'])?>"></a>
+      </div>
+      <div class="actual">Actual
+        <a href="#" class="edit-date" data-table="tracker" data-name="tt_prelminary_drawings_approved_actual" data-type="date" data-value="<?=dateFormat($tracker['tt_prelminary_drawings_approved_actual'])?>"></a>
+      </div>
+    </div>
+  </td>
+</tr>
+
+<tr>
+  <td>
+    &nbsp;
+  </td>
+  <td>
+    <div class="label">Permit Submitted
+      <i class="fa fa-comment <?=hasTrackerNote('ll_permit_submitted')?>"></i>
+      <div class="comment hidden">
+        <a href="#" class="edit" data-table="tracker" data-name="ll_permit_submitted_note" data-type="textarea"><?=$tracker['ll_permit_submitted_note'];?></a>
+      </div>
+    </div>
+    <div class="date-fields">
+      <div class="scheduled">Projected
+        <a href="#" class="edit-date" data-table="tracker" data-name="ll_permit_submitted_scheduled" data-type="date" data-value="<?=dateFormat($tracker['ll_permit_submitted_scheduled'])?>"></a>
+      </div>
+      <div class="actual">Actual
+        <a href="#" class="edit-date" data-table="tracker" data-name="ll_permit_submitted_actual" data-type="date" data-value="<?=dateFormat($tracker['ll_permit_submitted_actual'])?>"></a>
+      </div>
+    </div>
+  </td>
+  <td>
+    <div class="label">CD Complete
+      <i class="fa fa-comment <?=hasTrackerNote('tt_cd_complete')?>"></i>
+      <div class="comment hidden">
+        <a href="#" class="edit" data-table="tracker" data-name="tt_cd_complete_note" data-type="textarea"><?=$tracker['tt_cd_complete_note'];?></a>
+      </div>
+    </div>
+    <div class="date-fields">
+      <div class="scheduled">Projected
+        <a href="#" class="edit-date" data-table="tracker" data-name="tt_cd_complete_scheduled" data-type="date" data-value="<?=dateFormat($tracker['tt_cd_complete_scheduled'])?>"></a>
+      </div>
+      <div class="actual">Actual
+        <a href="#" class="edit-date" data-table="tracker" data-name="tt_cd_complete_actual" data-type="date" data-value="<?=dateFormat($tracker['tt_cd_complete_actual'])?>"></a>
+      </div>
+    </div>
+  </td>
+</tr>
+
+<tr>
+  <td>
+    &nbsp;
+  </td>
+  <td>
+    <div class="label">Permit Approved
+      <i class="fa fa-comment <?=hasTrackerNote('ll_permit_approved')?>"></i>
+      <div class="comment hidden">
+        <a href="#" class="edit" data-table="tracker" data-name="ll_permit_approved_note" data-type="textarea"><?=$tracker['ll_permit_approved_note'];?></a>
+      </div>
+    </div>
+    <div class="date-fields">
+      <div class="scheduled">Projected
+        <a href="#" class="edit-date" data-table="tracker" data-name="ll_permit_approved_scheduled" data-type="date" data-value="<?=dateFormat($tracker['ll_permit_approved_scheduled'])?>"></a>
+      </div>
+      <div class="actual">Actual
+        <a href="#" class="edit-date" data-table="tracker" data-name="ll_permit_approved_actual" data-type="date" data-value="<?=dateFormat($tracker['ll_permit_approved_actual'])?>"></a>
+      </div>
+    </div>
+  </td>
+  <td>
+    <div class="label">CD Approved
+      <i class="fa fa-comment <?=hasTrackerNote('tt_cd_approved')?>"></i>
+      <div class="comment hidden">
+        <a href="#" class="edit" data-table="tracker" data-name="tt_cd_approved_note" data-type="textarea"><?=$tracker['tt_cd_approved_note'];?></a>
+      </div>
+    </div>
+    <div class="date-fields">
+      <div class="scheduled">Projected
+        <a href="#" class="edit-date" data-table="tracker" data-name="tt_cd_approved_scheduled" data-type="date" data-value="<?=dateFormat($tracker['tt_cd_approved_scheduled'])?>"></a>
+      </div>
+      <div class="actual">Actual
+        <a href="#" class="edit-date" data-table="tracker" data-name="tt_cd_approved_actual" data-type="date" data-value="<?=dateFormat($tracker['tt_cd_approved_actual'])?>"></a>
+      </div>
+    </div>
+  </td>
+</tr>
+
+<tr>
+  <td>
+    &nbsp;
+  </td>
+  <td>
+    <div class="label">Construction Start
+      <i class="fa fa-comment <?=hasTrackerNote('ll_construction_start')?>"></i>
+      <div class="comment hidden">
+        <a href="#" class="edit" data-table="tracker" data-name="ll_construction_start_note" data-type="textarea"><?=$tracker['ll_construction_start_note'];?></a>
+      </div>
+    </div>
+    <div class="date-fields">
+      <div class="scheduled">Projected
+        <a href="#" class="edit-date" data-table="tracker" data-name="ll_construction_start_scheduled" data-type="date" data-value="<?=dateFormat($tracker['ll_construction_start_scheduled'])?>"></a>
+      </div>
+      <div class="actual">Actual
+        <a href="#" class="edit-date" data-table="tracker" data-name="ll_construction_start_actual" data-type="date" data-value="<?=dateFormat($tracker['ll_construction_start_actual'])?>"></a>
+      </div>
+    </div>
+  </td>
+  <td>
+    <div class="label">Permit Submit
+      <i class="fa fa-comment <?=hasTrackerNote('tt_permit_submitted')?>"></i>
+      <div class="comment hidden">
+        <a href="#" class="edit" data-table="tracker" data-name="tt_permit_submitted_note" data-type="textarea"><?=$tracker['tt_permit_submitted_note'];?></a>
+      </div>
+    </div>
+    <div class="date-fields">
+      <div class="scheduled">Projected
+        <a href="#" class="edit-date" data-table="tracker" data-name="tt_permit_submitted_scheduled" data-type="date" data-value="<?=dateFormat($tracker['tt_permit_submitted_scheduled'])?>"></a>
+      </div>
+      <div class="actual">Actual
+        <a href="#" class="edit-date" data-table="tracker" data-name="tt_permit_submitted_actual" data-type="date" data-value="<?=dateFormat($tracker['tt_permit_submitted_actual'])?>"></a>
+      </div>
+    </div>
+  </td>
+</tr>
+
+<tr>
+  <td>
+    &nbsp;
+  </td>
+  <td>
+    <div class="label">Construction Complete
+      <i class="fa fa-comment <?=hasTrackerNote('ll_construction_complete')?>"></i>
+      <div class="comment hidden">
+        <a href="#" class="edit" data-table="tracker" data-name="ll_construction_complete_note" data-type="textarea"><?=$tracker['ll_construction_complete_note'];?></a>
+      </div>
+    </div>
+    <div class="date-fields">
+      <div class="scheduled">Projected
+        <a href="#" class="edit-date" data-table="tracker" data-name="ll_construction_complete_scheduled" data-type="date" data-value="<?=dateFormat($tracker['ll_construction_complete_scheduled'])?>"></a>
+      </div>
+      <div class="actual">Actual
+        <a href="#" class="edit-date" data-table="tracker" data-name="ll_construction_complete_actual" data-type="date" data-value="<?=dateFormat($tracker['ll_construction_complete_actual'])?>"></a>
+      </div>
+    </div>
+  </td>
+  <td>
+    <div class="label">Permit Approved
+      <i class="fa fa-comment <?=hasTrackerNote('tt_permit_approved')?>"></i>
+      <div class="comment hidden">
+        <a href="#" class="edit" data-table="tracker" data-name="tt_permit_approved_note" data-type="textarea"><?=$tracker['tt_permit_approved_note'];?></a>
+      </div>
+    </div>
+    <div class="date-fields">
+      <div class="scheduled">Projected
+        <a href="#" class="edit-date" data-table="tracker" data-name="tt_permit_approved_scheduled" data-type="date" data-value="<?=dateFormat($tracker['tt_permit_approved_scheduled'])?>"></a>
+      </div>
+      <div class="actual">Actual
+        <a href="#" class="edit-date" data-table="tracker" data-name="tt_permit_approved_actual" data-type="date" data-value="<?=dateFormat($tracker['tt_permit_approved_actual'])?>"></a>
+      </div>
+    </div>
+  </td>
+</tr>
+
+<tr>
+  <td>
+    <div class="label">Delivery Letter
+      <i class="fa fa-comment <?=hasTrackerNote('lease_space_delivery_letter')?>"></i>
+      <div class="comment hidden">
+        <a href="#" class="edit" data-table="tracker" data-name="lease_space_delivery_letter_note" data-type="textarea"><?=$tracker['lease_space_delivery_letter_note'];?></a>
+      </div>
+    </div>
+    <div class="date-fields">
+      <div class="scheduled">Projected
+        <a href="#" class="edit-date" data-table="tracker" data-name="lease_space_delivery_letter_scheduled" data-type="date" data-value="<?=dateFormat($tracker['lease_space_delivery_letter_scheduled'])?>"></a>
+      </div>
+      <div class="actual">Actual
+        <a href="#" class="edit-date" data-table="tracker" data-name="lease_space_delivery_letter_actual" data-type="date" data-value="<?=dateFormat($tracker['lease_space_delivery_letter_actual'])?>"></a>
+      </div>
+    </div>
+  </td>
+  <td>
+    <div class="label">Space Delivery
+      <i class="fa fa-comment <?=hasTrackerNote('ll_space_delivery')?>"></i>
+      <div class="comment hidden">
+        <a href="#" class="edit" data-table="tracker" data-name="ll_space_delivery_note" data-type="textarea"><?=$tracker['ll_space_delivery_note'];?></a>
+      </div>
+    </div>
+    <div class="date-fields">
+      <div class="scheduled">Projected
+        <a href="#" class="edit-date" data-table="tracker" data-name="ll_space_delivery_scheduled" data-type="date" data-value="<?=dateFormat($tracker['ll_space_delivery_scheduled'])?>"></a>
+      </div>
+      <div class="actual">Actual
+        <a href="#" class="edit-date" data-table="tracker" data-name="ll_space_delivery_actual" data-type="date" data-value="<?=dateFormat($tracker['ll_space_delivery_actual'])?>"></a>
+      </div>
+    </div>
+  </td>
+  <td>
+    <div class="label">Construction Start
+      <i class="fa fa-comment <?=hasTrackerNote('tt_construction_start')?>"></i>
+      <div class="comment hidden">
+        <a href="#" class="edit" data-table="tracker" data-name="tt_construction_start_note" data-type="textarea"><?=$tracker['tt_construction_start_note'];?></a>
+      </div>
+    </div>
+    <div class="date-fields">
+      <div class="scheduled">Projected
+        <a href="#" class="edit-date" data-table="tracker" data-name="tt_construction_start_scheduled" data-type="date" data-value="<?=dateFormat($tracker['tt_construction_start_scheduled'])?>"></a>
+      </div>
+      <div class="actual">Actual
+        <a href="#" class="edit-date" data-table="tracker" data-name="tt_construction_start_actual" data-type="date" data-value="<?=dateFormat($tracker['tt_construction_start_actual'])?>"></a>
+      </div>
+    </div>
+  </td>
+</tr>
+
+<tr>
+  <td>
+    &nbsp;
   </td>
   <td>
     &nbsp;
   </td>
   <td>
-    <div class="label">CD Complete</div>
-    <div class="date-fields">
-      <div class="scheduled">Projected
-        <a href="#" class="edit-date" data-name="xxxx_scheduled" data-type="date" data-value="<?=dateFormat($tracker['xxxx_scheduled'])?>"></a>
-      </div>
-      <div class="actual">Actual
-        <a href="#" class="edit-date" data-name="xxxx_actual" data-type="date" data-value="<?=dateFormat($tracker['xxxx_actual'])?>"></a>
+    <div class="label">Construction Complete
+      <i class="fa fa-comment <?=hasTrackerNote('tt_construction_complete')?>"></i>
+      <div class="comment hidden">
+        <a href="#" class="edit" data-table="tracker" data-name="tt_construction_complete_note" data-type="textarea"><?=$tracker['tt_construction_complete_note'];?></a>
       </div>
     </div>
-  </td>
-  <td>
-    <div class="label">Prelminary Drawings Approved</div>
     <div class="date-fields">
       <div class="scheduled">Projected
-        <a href="#" class="edit-date" data-name="xxxx_scheduled" data-type="date" data-value="<?=dateFormat($tracker['xxxx_scheduled'])?>"></a>
+        <a href="#" class="edit-date" data-table="tracker" data-name="tt_construction_complete_scheduled" data-type="date" data-value="<?=dateFormat($tracker['tt_construction_complete_scheduled'])?>"></a>
       </div>
       <div class="actual">Actual
-        <a href="#" class="edit-date" data-name="xxxx_actual" data-type="date" data-value="<?=dateFormat($tracker['xxxx_actual'])?>"></a>
+        <a href="#" class="edit-date" data-table="tracker" data-name="tt_construction_complete_actual" data-type="date" data-value="<?=dateFormat($tracker['tt_construction_complete_actual'])?>"></a>
       </div>
     </div>
   </td>
 </tr>
-<!-- 7 -->
+
 <tr>
   <td>
-    <div class="badge badge-primary">7</div>
-  </td>
-  <td>
-    &nbsp;
-  </td>
-  <td>
-    <div class="label">Permit Submitted</div>
-    <div class="date-fields">
-      <div class="scheduled">Projected
-        <a href="#" class="edit-date" data-name="xxxx_scheduled" data-type="date" data-value="<?=dateFormat($tracker['xxxx_scheduled'])?>"></a>
-      </div>
-      <div class="actual">Actual
-        <a href="#" class="edit-date" data-name="xxxx_actual" data-type="date" data-value="<?=dateFormat($tracker['xxxx_actual'])?>"></a>
+    <div class="label">Rent Commence
+      <i class="fa fa-comment <?=hasTrackerNote('lease_rental_commencement')?>"></i>
+      <div class="comment hidden">
+        <a href="#" class="edit" data-table="tracker" data-name="lease_rental_commencement_note" data-type="textarea"><?=$tracker['lease_rental_commencement_note'];?></a>
       </div>
     </div>
-  </td>
-  <td>
-    <div class="label">CD Complete</div>
     <div class="date-fields">
       <div class="scheduled">Projected
-        <a href="#" class="edit-date" data-name="xxxx_scheduled" data-type="date" data-value="<?=dateFormat($tracker['xxxx_scheduled'])?>"></a>
+        <a href="#" class="edit-date" data-table="tracker" data-name="lease_rental_commencement_scheduled" data-type="date" data-value="<?=dateFormat($tracker['lease_rental_commencement_scheduled'])?>"></a>
       </div>
       <div class="actual">Actual
-        <a href="#" class="edit-date" data-name="xxxx_actual" data-type="date" data-value="<?=dateFormat($tracker['xxxx_actual'])?>"></a>
-      </div>
-    </div>
-  </td>
-</tr>
-<!-- 8 -->
-<tr>
-  <td>
-    <div class="badge badge-primary">8</div>
-  </td>
-  <td>
-    &nbsp;
-  </td>
-  <td>
-    <div class="label">Permit Approved</div>
-    <div class="date-fields">
-      <div class="scheduled">Projected
-        <a href="#" class="edit-date" data-name="xxxx_scheduled" data-type="date" data-value="<?=dateFormat($tracker['xxxx_scheduled'])?>"></a>
-      </div>
-      <div class="actual">Actual
-        <a href="#" class="edit-date" data-name="xxxx_actual" data-type="date" data-value="<?=dateFormat($tracker['xxxx_actual'])?>"></a>
-      </div>
-    </div>
-  </td>
-  <td>
-    <div class="label">CD Approved</div>
-    <div class="date-fields">
-      <div class="scheduled">Projected
-        <a href="#" class="edit-date" data-name="xxxx_scheduled" data-type="date" data-value="<?=dateFormat($tracker['xxxx_scheduled'])?>"></a>
-      </div>
-      <div class="actual">Actual
-        <a href="#" class="edit-date" data-name="xxxx_actual" data-type="date" data-value="<?=dateFormat($tracker['xxxx_actual'])?>"></a>
-      </div>
-    </div>
-  </td>
-</tr>
-<!-- 9 -->
-<tr>
-  <td>
-    <div class="badge badge-primary">9</div>
-  </td>
-  <td>
-    &nbsp;
-  </td>
-  <td>
-    <div class="label">Construction Start</div>
-    <div class="date-fields">
-      <div class="scheduled">Projected
-        <a href="#" class="edit-date" data-name="xxxx_scheduled" data-type="date" data-value="<?=dateFormat($tracker['xxxx_scheduled'])?>"></a>
-      </div>
-      <div class="actual">Actual
-        <a href="#" class="edit-date" data-name="xxxx_actual" data-type="date" data-value="<?=dateFormat($tracker['xxxx_actual'])?>"></a>
-      </div>
-    </div>
-  </td>
-  <td>
-    <div class="label">Permit Submit</div>
-    <div class="date-fields">
-      <div class="scheduled">Projected
-        <a href="#" class="edit-date" data-name="xxxx_scheduled" data-type="date" data-value="<?=dateFormat($tracker['xxxx_scheduled'])?>"></a>
-      </div>
-      <div class="actual">Actual
-        <a href="#" class="edit-date" data-name="xxxx_actual" data-type="date" data-value="<?=dateFormat($tracker['xxxx_actual'])?>"></a>
-      </div>
-    </div>
-  </td>
-</tr>
-<!-- 10 -->
-<tr>
-  <td>
-    <div class="badge badge-primary">10</div>
-  </td>
-  <td>
-    &nbsp;
-  </td>
-  <td>
-    <div class="label">Construction Complete</div>
-    <div class="date-fields">
-      <div class="scheduled">Projected
-        <a href="#" class="edit-date" data-name="xxxx_scheduled" data-type="date" data-value="<?=dateFormat($tracker['xxxx_scheduled'])?>"></a>
-      </div>
-      <div class="actual">Actual
-        <a href="#" class="edit-date" data-name="xxxx_actual" data-type="date" data-value="<?=dateFormat($tracker['xxxx_actual'])?>"></a>
-      </div>
-    </div>
-  </td>
-  <td>
-    <div class="label">Permit Approved</div>
-    <div class="date-fields">
-      <div class="scheduled">Projected
-        <a href="#" class="edit-date" data-name="xxxx_scheduled" data-type="date" data-value="<?=dateFormat($tracker['xxxx_scheduled'])?>"></a>
-      </div>
-      <div class="actual">Actual
-        <a href="#" class="edit-date" data-name="xxxx_actual" data-type="date" data-value="<?=dateFormat($tracker['xxxx_actual'])?>"></a>
-      </div>
-    </div>
-  </td>
-</tr>
-<!-- 11 -->
-<tr>
-  <td>
-    <div class="badge badge-primary">11</div>
-  </td>
-  <td>
-    <div class="label">Delivery Letter</div>
-    <div class="date-fields">
-      <div class="scheduled">Projected
-        <a href="#" class="edit-date" data-name="xxxx_scheduled" data-type="date" data-value="<?=dateFormat($tracker['xxxx_scheduled'])?>"></a>
-      </div>
-      <div class="actual">Actual
-        <a href="#" class="edit-date" data-name="xxxx_actual" data-type="date" data-value="<?=dateFormat($tracker['xxxx_actual'])?>"></a>
-      </div>
-    </div>
-  </td>
-  <td>
-    <div class="label">Space Delivery</div>
-    <div class="date-fields">
-      <div class="scheduled">Projected
-        <a href="#" class="edit-date" data-name="xxxx_scheduled" data-type="date" data-value="<?=dateFormat($tracker['xxxx_scheduled'])?>"></a>
-      </div>
-      <div class="actual">Actual
-        <a href="#" class="edit-date" data-name="xxxx_actual" data-type="date" data-value="<?=dateFormat($tracker['xxxx_actual'])?>"></a>
-      </div>
-    </div>
-  </td>
-  <td>
-    <div class="label">Construction Start</div>
-    <div class="date-fields">
-      <div class="scheduled">Projected
-        <a href="#" class="edit-date" data-name="xxxx_scheduled" data-type="date" data-value="<?=dateFormat($tracker['xxxx_scheduled'])?>"></a>
-      </div>
-      <div class="actual">Actual
-        <a href="#" class="edit-date" data-name="xxxx_actual" data-type="date" data-value="<?=dateFormat($tracker['xxxx_actual'])?>"></a>
-      </div>
-    </div>
-  </td>
-</tr>
-<!-- 12 -->
-<tr>
-  <td>
-    <div class="badge badge-primary">12</div>
-  </td>
-  <td>
-    &nbsp;
-  </td>
-  <td>
-    &nbsp;
-  </td>
-  <td>
-    <div class="label">Construction Complete</div>
-    <div class="date-fields">
-      <div class="scheduled">Projected
-        <a href="#" class="edit-date" data-name="xxxx_scheduled" data-type="date" data-value="<?=dateFormat($tracker['xxxx_scheduled'])?>"></a>
-      </div>
-      <div class="actual">Actual
-        <a href="#" class="edit-date" data-name="xxxx_actual" data-type="date" data-value="<?=dateFormat($tracker['xxxx_actual'])?>"></a>
-      </div>
-    </div>
-  </td>
-</tr>
-<!-- 13 -->
-<tr>
-  <td>
-    <div class="badge badge-primary">13</div>
-  </td>
-  <td>
-    <div class="label">Rent Commence</div>
-    <div class="date-fields">
-      <div class="scheduled">Projected
-        <a href="#" class="edit-date" data-name="xxxx_scheduled" data-type="date" data-value="<?=dateFormat($tracker['xxxx_scheduled'])?>"></a>
-      </div>
-      <div class="actual">Actual
-        <a href="#" class="edit-date" data-name="xxxx_actual" data-type="date" data-value="<?=dateFormat($tracker['xxxx_actual'])?>"></a>
+        <a href="#" class="edit-date" data-table="tracker" data-name="lease_rental_commencement_actual" data-type="date" data-value="<?=dateFormat($tracker['lease_rental_commencement_actual'])?>"></a>
       </div>
     </div>
   </td>
@@ -418,22 +529,27 @@
     &nbsp;
   </td>
   <td>
-    <div class="label">Space Open</div>
+    <div class="label">Space Open
+      <i class="fa fa-comment <?=hasTrackerNote('tt_space_open')?>"></i>
+      <div class="comment hidden">
+        <a href="#" class="edit" data-table="tracker" data-name="tt_space_open_note" data-type="textarea"><?=$tracker['tt_space_open_note'];?></a>
+      </div>
+    </div>
     <div class="date-fields">
       <div class="scheduled">Projected
-        <a href="#" class="edit-date" data-name="xxxx_scheduled" data-type="date" data-value="<?=dateFormat($tracker['xxxx_scheduled'])?>"></a>
+        <a href="#" class="edit-date" data-table="tracker" data-name="tt_space_open_scheduled" data-type="date" data-value="<?=dateFormat($tracker['tt_space_open_scheduled'])?>"></a>
       </div>
       <div class="actual">Actual
-        <a href="#" class="edit-date" data-name="xxxx_actual" data-type="date" data-value="<?=dateFormat($tracker['xxxx_actual'])?>"></a>
+        <a href="#" class="edit-date" data-table="tracker" data-name="tt_space_open_actual" data-type="date" data-value="<?=dateFormat($tracker['tt_space_open_actual'])?>"></a>
       </div>
     </div>
   </td>
 </tr>
 </table>
 
-    <div class="col">Misc Schedule Notes</div>
+    <div class="col"><strong>Misc Schedule Notes</strong></div>
     <div class="col">
-      <a href="#" data-type="textarea" data-table="projects" data-name="schedule_notes" class="edit arch" data-value="<?=stripslashes($project['schedule_notes'])?>"></a>
+      <a href="#" data-type="textarea" data-table="projects" data-name="schedule_notes" class="edit arch" data-value="<?=stripslashes($tracker['schedule_notes'])?>"></a>
     </div>
 
 </div>

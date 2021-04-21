@@ -9,11 +9,9 @@ function pprint_r($var){
 	$query = "SELECT * FROM projects WHERE id = $id";
 	$result = mysqli_query($dbcnx, $query) or die ("no query");	
 	$data = array();
-	
   while($row = mysqli_fetch_assoc($result)) {
 	  $data[] = $row;
 	}
-
 	$project = $data[0];
 
 	if ($project['chain']==1){ 
@@ -21,11 +19,11 @@ function pprint_r($var){
   } else {
    $sitechain = "Rampage";
  }
-	
+
 	$companyarray = unserialize($project['companyarray']);
-	
+
   $sitename = $project['sitename'];
-	
+
 	$query = "SELECT * FROM realestate WHERE project_id = $id";
 	$result = mysqli_query($dbcnx, $query) or die ("no query");	
 	$data = array();
@@ -162,10 +160,26 @@ function pprint_r($var){
 <div class="row">
   <div class="col">
   <div class="row">
-    <div class="col" for="p-sitename">Project Name</div>
+    <div class="col" for="p-sitename">Location Name</div>
     <div class="col">
       <a href="#" data-type="text" data-table="projects" data-name="sitename" class="edit">
         <?=$project['sitename']?>
+      </a>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col" for="p-sitespace">Space</div>
+    <div class="col">
+      <a href="#" data-type="text" data-table="projects" data-name="sitespace" class="edit">
+        <?=$project['sitespace']?>
+      </a>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col" for="p-tenant">Tenant</div>
+    <div class="col">
+      <a href="#" data-type="text" data-table="projects" data-name="tenant" class="edit">
+        <?=$project['tenant']?>
       </a>
     </div>
   </div>
@@ -176,13 +190,13 @@ function pprint_r($var){
     </div>
   </div>
   <div class="row">
-    <div class="col" for="p-store_district">District</div>
+    <div class="col" for="p-store_district">Store District</div>
     <div class="col">
       <a href="#" data-type="text" data-table="projects" data-name="store_district" class="edit"><?=intval($project['store_district'])?></a>
     </div>
   </div>
   <div class="row">
-    <div class="col" for="p-store_region">Region</div>
+    <div class="col" for="p-store_region">Store Region</div>
     <div class="col">
       <a href="#" data-type="text" data-table="projects" data-name="store_region" class="edit"><?=intval($project['store_region'])?></a>
     </div>
@@ -207,34 +221,29 @@ function pprint_r($var){
       <a href="#" data-type="select" data-table="projects" data-name="project_status" class="edit" data-source="[{value:'proposed', text:'Proposed'}, {value:'active', text:'Active'}, {value:'archive', text:'Archive'}, {value:'real_estate', text:'Real Estate Archive'}, {value:'other',text:'Other'}, {value:'', text:'None'}]" data-value="<?=$project['project_status']?>"></a>
     </div>
   </div>
-  <div class="row">
-    <div class="col" for="p-project_type">Project Type</div>
-    <div class="col">
-      <a href="#" data-type="select" data-table="projects" data-name="project_type" class="edit" data-source="[{value:'new',text:'New'},{value:'renovation',text:'Renovation'},{value:'relocation',text:'Relocation'},{value:'remodel',text:'Remodel'},{value:'downsize',text:'Downsize'},{value:'temp',text:'Temp'},{value:'misc',text:'Misc'},{value:'other',text:'Other'},{value:'',text:'None'}]" data-value="<?=$project['project_type']?>"></a>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col" for="p-sitenum">Job #</div>
-    <div class="col">
-      <a href="#" data-type="text" data-table="projects" data-name="sitenum" class="edit"><?=$project['sitenum']?></a>
-    </div>
-  </div>
-  
-  <div class="row">
-    <div class="col" for="p-architect">Architect</div>
-    <div class="col">
-      <a href="#" data-type="text" data-table="projects" data-name="architect" class="edit"><?=$project['architect']?></a>
-    </div>
-  </div>
-  
-	</div>
-</div>
 
-<div class="row">
-  <div class="col">
+
+
+
+  <div class="row">
+    <div class="col" for="p-project_status">Stage</div>
+    <div class="col">
+      <a href="#" data-type="select" data-table="projects" data-name="stage" class="edit" data-source="['TT Deal Approval','LL Deal Approval','Lease Comments','TT Signed Lease','LL Signed Lease','LLW Construction','Space Delivery','TT Construction','TT Stock and Train','TT Open']" data-value="<?=$project['stage']?>"></a>
+    </div>
+  </div>
+
+
+    <div class="row">
+    <div class="col" for="p-project_status">Risk</div>
+    <div class="col">
+      <a href="#" data-type="select" data-table="projects" data-name="risk" class="edit" data-source="['On Schedule','LL Lease Delay','TT Lease Delay','LL Work Delay','TT Work Delay','TT Product Delay','City Delay','Amendment Pending']" data-value="<?=$project['risk']?>"></a>
+    </div>
+  </div>
+
+
   <div class="row">
     <div class="col" for="p-siteaddress">Address (<a href="http://maps.google.com/maps?q=<?=$project['siteaddress']?>,<?=$project['sitecity']?>,<?=$project['sitestate']?>,<?=$project['sitezip']?>" target="_blank" title="Opens Google map in a new window!">Map</a>)
-</div>
+    </div>
     <div class="col">
       <a href="#" data-type="text" data-table="projects" data-name="siteaddress" class="edit"><?=$project['siteaddress']?></a>
     </div>
@@ -263,6 +272,32 @@ function pprint_r($var){
       <a href="#" data-type="text" data-table="projects" data-name="sitezip" class="edit"><?=$project['sitezip']?></a>
     </div>
   </div>
+  <div class="row">
+    <div class="col" for="p-project_type">Project Type</div>
+    <div class="col">
+      <a href="#" data-type="select" data-table="projects" data-name="project_type" class="edit" data-source="[{value:'new',text:'New'},{value:'renovation',text:'Renovation'},{value:'relocation',text:'Relocation'},{value:'remodel',text:'Remodel'},{value:'downsize',text:'Downsize'},{value:'temp',text:'Temp'},{value:'misc',text:'Misc'},{value:'other',text:'Other'},{value:'',text:'None'}]" data-value="<?=$project['project_type']?>"></a>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col" for="p-sitenum">Job #</div>
+    <div class="col">
+      <a href="#" data-type="text" data-table="projects" data-name="sitenum" class="edit"><?=$project['sitenum']?></a>
+    </div>
+  </div>
+  
+  <div class="row">
+    <div class="col" for="p-architect">Architect</div>
+    <div class="col">
+      <a href="#" data-type="text" data-table="projects" data-name="architect" class="edit"><?=$project['architect']?></a>
+    </div>
+  </div>
+  
+	</div>
+</div>
+
+<div class="row">
+  <div class="col">
+
 </div>
 
 
@@ -339,7 +374,11 @@ function pprint_r($var){
 		<div class="pane-content"><?php include("project_contacts.php"); ?></div>
 	</div>
 
-<?php if($usercompany < 10): ?>
+<?php
+  $project_modules = json_decode($project['project_modules']);
+?>
+
+<?php if($project_modules->store_attributes): ?>
   <div class="pane closed" id="summary-attributes">
     <div class="pane-header">Store Attributes<span class="symbol"><i class="icon-chevron-right"></i></span></div>
     <div class="pane-content"><?php include("project_store_attr.php"); ?></div>

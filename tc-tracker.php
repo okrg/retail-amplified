@@ -1,26 +1,27 @@
 <?php
-  $sql = "SELECT tracker.id, tracker.project_id, tracker.tenant, tracker.stage, tracker.risk, tracker.date_modified, projects.sitename, projects.sitecity, projects.sitestate FROM tracker INNER JOIN projects  ON tracker.project_id = projects.id order by tracker.date_modified DESC";
+  $sql = "SELECT tracker.id, tracker.project_id, tracker.tenant, tracker.stage, tracker.risk, tracker.date_modified, tracker.sitename, tracker.sitespace, tracker.location FROM tracker order by tracker.date_modified DESC";
   $result = mysqli_query($dbcnx, $sql);
   if (!$result){
     error("A databass error has occured 1.\\n".mysqli_error($dbcnx));
   }
 ?>
 
+<h2>TC Tracker</h2>
+
 <form class="sticky-top filter-form">
   <div class="form-row">
- 	<div class="form-group col-md-6">
-      <label>Search</label>
-      <input type="text" class="form-control" id="mySearchText" placeholder="Enter name, store number, city" autocomplete="off">      
-    </div>
     <div class="form-group col-md-3">
-      <label for="inputPassword4">All Stages</label>
+      <label for="inputPassword4">Filter by Stage</label>
       <div id="stage-filter"></div>
     </div>
     <div class="form-group col-md-3">
-      <label for="inputEmail4">All Risks</label>
+      <label for="inputEmail4">Filter by Risk</label>
       <div id="risk-filter"></div>
-    </div>    
-    
+    </div>
+    <div class="form-group col-md-6">
+      <label>Search</label>
+      <input type="text" class="form-control" id="mySearchText" placeholder="Tenant, Space, Center, Location" autocomplete="off">
+    </div>
   </div>
 </form>
 
@@ -28,20 +29,20 @@
   <thead>
     <tr>
       <th>Tenant</th>
+      <th>Space</th>
+      <th>Center</th>
       <th>Location</th>
-      <th>City</th>
-      <th>State</th>
-      <th class="stage-filter">Stage</th>      
-      <th class="risk-filter">Risk</th>      
+      <th class="stage-filter">Stage</th>
+      <th class="risk-filter">Risk</th>
     </tr>
   </thead>
   <tbody>
   <?php while ($row = mysqli_fetch_array($result)): ?>
     <tr data-project-id="<?=$row['id']?>">
       <td><?=$row['tenant']?></td>
+      <td><?=$row['sitespace']?></td>
       <td><?=$row['sitename']?></td>
-      <td><?=$row['sitecity']?></td>
-      <td><?=$row['sitestate']?></td>      
+      <td><?=$row['location']?></td>
       <td><?=$row['stage']?></td>
       <td><?=$row['risk']?></td>
     </tr>
@@ -71,11 +72,10 @@
                         var val = $.fn.dataTable.util.escapeRegex(
                             $(this).val()
                         );
- 
                         column
                             .search( val ? '^'+val+'$' : '', true, false )
                             .draw();
-                    } ); 
+                    } );
                 column.data().unique().sort().each( function ( d, j ) {
                     select.append( '<option value="'+d+'">'+d+'</option>' )
                 } );
@@ -88,11 +88,10 @@
                         var val = $.fn.dataTable.util.escapeRegex(
                             $(this).val()
                         );
- 
-                        column
+                         column
                             .search( val ? '^'+val+'$' : '', true, false )
                             .draw();
-                    } ); 
+                    } );
                 column.data().unique().sort().each( function ( d, j ) {
                     select.append( '<option value="'+d+'">'+d+'</option>' )
                 } );

@@ -1022,8 +1022,22 @@ form.filter-form {
   border-bottom: 1px $dark solid;
 }
 
+
+section#home-dashboard {
+  .filter-card:hover {
+    background: #d1ecf1;
+  }
+}
+
+
 .dataTables_filter {
   display: none;
+}
+.dataTables_wrapper {
+  input.dataTables-search {
+    font-size: 12px;
+    width: 100%;    
+  }
 }
 
 table.dataTable {
@@ -1046,9 +1060,44 @@ a.rfi-file {
   padding: 0.25rem 0.5rem;
   font-size: 0.8rem;
 }
+#tracker-summary-form {
 
+
+}
+
+.datepicker-dropdown {
+  margin-top: 20px;
+}
 
 #tracker-schedule-form {
+  .note-summary {
+    a:before {
+      content: 'Hide ';
+    }
+    .notes {
+      margin: 12px 0;
+      padding: 12px;
+      background: #efefef;
+      border-radius: 4px;
+      em {
+        padding-top: 12px;
+        display: block;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 12px;
+      }
+    }
+    &.hidden {
+      a:before {
+        content: 'Show ';
+      }
+      .notes {
+        display: none;
+      }
+    }
+  }
+
+
   th.stage {
     width: 10%;
   }
@@ -1058,17 +1107,76 @@ a.rfi-file {
   td {
     //text-align: center;
     .label {
-      border-bottom: 1px #dee2e6 solid;
+      
       margin-bottom: 8px;
       padding-bottom: 8px;
+      i.fa-comment {
+        color: #ddd;
+        cursor: pointer;
+        &:hover {
+          color: #bbb;
+        }
+        &.hascomment {
+          color: $primary;
+        }
+        &.hascomment:hover {
+          color: blue;
+        }
+      }
+      .comment {
+        padding: 4px;
+        background: #efefef;
+        border-radius: 4px;
+        &.hidden {
+          display: none;
+        }
+      }
     }
   }
   .date-fields {
     display: flex;
+    justify-content: space-between;
     .scheduled, .actual {
       text-transform: uppercase;
       font-size: 12px;
-      width: 50%;
+      width: 33%;
+    }
+    .editable-input input {
+      height: 32px;
+    }
+    .control-group {
+      background:#fff;
+      z-index: 10;
+      position: relative;
+    }
+    .editable-buttons {
+      
+      button.editable-submit {
+        height: 32px;
+      }
+    }
+  }
+}
+
+
+#shared-lists {
+  margin-bottom: 16px;
+  header {
+    font-weight: bold;
+    font-size: 14px;
+  }
+  .list-group {
+    min-height: 40px;
+    padding: 8px;
+    border: 1px #ddd solid;
+    border-radius: 4px;
+    background: #eee;
+    .list-group-item {
+      cursor: move;
+      padding: .25rem 1rem;
+      &:hover {
+        background: #d1ecf1;
+      }
     }
   }
 }

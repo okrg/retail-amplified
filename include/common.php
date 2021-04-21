@@ -242,19 +242,17 @@ function send_invite($user_email, $user_pass) {
 
 You are invited to join the Charlotte Russe collaboration network app.
 
-To login, go to http://construction2.charlotte-russe.com and login using:
+To login, go to https://cna-app.retailamp.net and login using:
 
     Email: $user_email
     Password: $user_pass  
 
-For security reasons, your password was randomly generated.   You can change it anytime.
-
-Please contact support@DOMAIN if you need any help.
+For security reasons, your password was randomly generated. You can change it anytime. Please contact support@retailamp.net if you need any help.
 
 [This was an automated message]
 ";
 
-  mail($user_email,"Collaboration Network: Your account info", $message, "From:Collaboration Network <no-reply@charlotte-russe.com>");
+  mail($user_email,"Welcome to Retail Amplified", $message, "From:Retail Amplified <no-reply@retailamp.net>");
 }
 
 

@@ -9,7 +9,7 @@ if ($usergroup != 0) {
 
 ?>
 
-  <h1>User Accounts</h1>
+  <h1>Users</h1>
   <div class="my-2">
     <a class="btn btn-info" href="index.php?page=admin-user-form">Add New User</a>
   </div>
